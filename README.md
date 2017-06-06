@@ -8,25 +8,23 @@
 ### 安装
 
 - 首先安装OpenResty(可以按自己的需要安装)
-	[root@iZ~]#yum install libtermcap-devel ncurses-devel libevent-devel readline-devel pcre-devel openssl openssl-devel 
-	[root@iZ~]#./configure --prefix=/usr/local/openresty \
-	 --with-http_image_filter_module \
-	  --with-http_ssl_module \
-	  --with-http_stub_status_module \ 
-	  --with-luajit 
+    - [root@iZ~]#yum install libtermcap-devel ncurses-devel libevent-devel readline-devel pcre-devel openssl openssl-devel 
+    - [root@iZ~]#./configure --prefix=/usr/local/openresty  --with-luajit 
 	 
-	注意:
-	有个 resty-uuid  需要引用 libuuid.so 动态库
-	打印log提示信息是这样的:
-	libuuid.so: cannot open shared object file: No such file or directory
-	解决方法: 
-	[root@iZ~]#yum install libuuid libuuid-devel 
-	[root@iZ~]#ln -s /lib64/libuuid.so.1.3.0 /usr/lib64/libuuid.so
-	[root@iZ~]#ln -s /usr/lib64/libuuid.so /usr/local/openresty/lualib/resty/libuuid.so
-	[root@iZ~]# ldconfig
+   - 注意:
+   - 有个 resty-uuid  需要引用 libuuid.so 动态库
+   - 打印log提示信息是这样的:
+   - libuuid.so: cannot open shared object file: No such file or directory
+   - 解决方法: 
+   - [root@iZ~]#yum install libuuid libuuid-devel 
+   - [root@iZ~]#ln -s /lib64/libuuid.so.1.3.0 /usr/lib64/libuuid.so
+   - [root@iZ~]#ln -s /usr/lib64/libuuid.so /usr/local/openresty/lualib/resty/libuuid.so
+   - [root@iZ~]# ldconfig
  
  
 - 目前只需要一张表用户表，将其导入到MySQL   (按需处理多余字段)
+
+```
 	CREATE TABLE `mg_user_member` (
 	  `uid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户UID',
 	  `admin_id` int(10) NOT NULL DEFAULT '0' COMMENT '0为非管理员，1为管理员',
@@ -58,6 +56,7 @@
 	  KEY `mobile` (`mobile`) USING BTREE
 	) ENGINE=MyISAM AUTO_INCREMENT=1225 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户表';
 
+```
 
 
 - 修改配置文件`app/config/config.lua`为本地对应配置，强烈建议将以下值修改为不同配置
