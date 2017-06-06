@@ -10,9 +10,14 @@
 - 首先安装OpenResty(可以按自己的需要安装)
 
 ```
-    - [root@iZ~]#yum install libtermcap-devel ncurses-devel libevent-devel readline-devel pcre-devel openssl openssl-devel 
-    - [root@iZ~]#./configure --prefix=/usr/local/openresty  --with-luajit 
-	 
+    [root@iZ~]#yum install libtermcap-devel ncurses-devel libevent-devel \
+    readline-devel pcre-devel openssl openssl-devel 
+     
+    [root@iZ~]#wget https://openresty.org/download/openresty-1.11.2.3.tar.gz
+    [root@iZ~]#tar xvf openresty-1.11.2.3.tar.gz
+    [root@iZ~]#cd openresty-1.11.2.3
+    ./configure --with-luajit && make && make install
+
     注意:  有个 resty-uuid  需要引用 libuuid.so 动态库
     打印log提示信息是这样的:
     libuuid.so: cannot open shared object file: No such file or directory
