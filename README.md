@@ -3,11 +3,8 @@
 一个运行在[OpenResty](http://openresty.org)上的基于[lor](https://github.com/sumory/lor)编写的web聊天软件。
 
 - 完全基于OpenResty
-- 存储采用MySQL，ngx.shared.DICT(共享内存区块)
-
-
-### 实现方案
-- 服务端接收消息后 临时存储，客户端携带偏移位置一直读取最新。
+- 存储采用MySQL，ngx.shared.DICT(共享内存区块) 
+- 方案: 服务端接收消息后 临时存储，客户端携带偏移位置一直读取最新。
 
 
 ### 安装
