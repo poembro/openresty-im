@@ -180,7 +180,7 @@ $( function(){
                         self.send(); 
                         $('.face_box').addClass("hide");
                    });  
-                   setTimeout(function (){ _.comet.sub(); }, 2000); 
+                   _.comet.sub();
                    return true;
             },
             fun : function (res){
@@ -289,7 +289,10 @@ $( function(){
                         	return console.log('发送中...');
                         },
                         success:function(data){
-                        	console.log(data);
+                        	if (! data.success)
+                        	{
+                        		return location.href="/index"
+                        	}	
                             if (data.status < 1)
                             {
                             	return _.alert('消息发送失败/(ㄒoㄒ)/~~');
