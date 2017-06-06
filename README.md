@@ -8,19 +8,21 @@
 ### 安装
 
 - 首先安装OpenResty(可以按自己的需要安装)
+
+```
     - [root@iZ~]#yum install libtermcap-devel ncurses-devel libevent-devel readline-devel pcre-devel openssl openssl-devel 
     - [root@iZ~]#./configure --prefix=/usr/local/openresty  --with-luajit 
 	 
-   - 注意:
-   - 有个 resty-uuid  需要引用 libuuid.so 动态库
-   - 打印log提示信息是这样的:
-   - libuuid.so: cannot open shared object file: No such file or directory
-   - 解决方法: 
-   - [root@iZ~]#yum install libuuid libuuid-devel 
-   - [root@iZ~]#ln -s /lib64/libuuid.so.1.3.0 /usr/lib64/libuuid.so
-   - [root@iZ~]#ln -s /usr/lib64/libuuid.so /usr/local/openresty/lualib/resty/libuuid.so
-   - [root@iZ~]# ldconfig
- 
+    注意:  有个 resty-uuid  需要引用 libuuid.so 动态库
+    打印log提示信息是这样的:
+    libuuid.so: cannot open shared object file: No such file or directory
+    解决方法: 
+    [root@iZ~]#yum install libuuid libuuid-devel 
+    [root@iZ~]#ln -s /lib64/libuuid.so.1.3.0 /usr/lib64/libuuid.so
+    [root@iZ~]#ln -s /usr/lib64/libuuid.so /usr/local/openresty/lualib/resty/libuuid.so
+    [root@iZ~]# ldconfig
+
+```
  
 - 目前只需要一张表用户表，将其导入到MySQL   (按需处理多余字段)
 
