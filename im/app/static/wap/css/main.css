@@ -1,0 +1,236 @@
+@charset "UTF-8";
+/*字体样式*/
+.feB {
+  font-weight: bold; }
+
+.ui-loader {
+  display: none; }
+
+input[type=button], input[type=submit], button {
+  -webkit-appearance: none;
+  outline: none; }
+
+.cRed, .cRed:visited, .cRed a, a.cRed {
+  color: #b12a31; }
+
+html {
+  font-size: 20px; }
+
+.iconfont {
+  font-size: 0.75rem; }
+
+.LiveHall {  font-size: 0.75rem; }
+  .LiveHall header.topNav {
+    background-color: #074470;
+    color: #FFF;
+    height: 2rem;
+    line-height: 2rem;
+    text-align: center; }
+    .LiveHall header.topNav .navBtn {
+      color: #FFF;
+      width: 3.325rem;
+      height: 1.25rem;
+      line-height: 1.25rem;
+      text-align: center;
+      border-radius: 0.1rem;
+      margin: 0 10px;
+      margin-top: 8px; font-size: 12px; 
+}
+    .LiveHall header.topNav .title {
+      margin: auto;
+      display: inline-block;
+      margin: auto;
+      font-size: 0.8rem; }
+  .LiveHall .liveWindow {
+    height: 6.875rem; z-index:1;
+    width: 100%; }
+    .LiveHall .liveWindow img {
+      width: 100%;
+      height: 100%; }
+  .LiveHall .notify {
+    height: 1.2rem;
+    line-height: 1.2rem;
+    background-color: #074470;
+    color: #FFF;
+    font-size: 0.6rem;
+    padding-left: 1.6rem; }
+    .LiveHall .notify .iconfont {
+      float: left;
+      margin-left: -1.6rem;
+      font-size: 0.75rem;
+      padding-left: 0.45rem; }
+  .LiveHall .chattingRecords {
+    padding: 0.375rem 0; }
+    .LiveHall .chattingRecords ul li {
+      padding: 0.375rem;
+      padding-left: 2.5rem;
+      overflow: hidden;
+      color: #5f5f5f; }
+      .LiveHall .chattingRecords ul li .portrait {
+        float: left;
+        width: 1.375rem;
+        height: 1.375rem;
+        margin-left: -2rem; }
+        .LiveHall .chattingRecords ul li .portrait img {
+          width: 100%;
+          height: 100%; }
+      .LiveHall .chattingRecords ul li .textBox {
+        background-color: #e8e8e8;
+        display: inline-block;
+        padding: 0.5rem 0.75rem;
+        margin-top: 0.15rem;
+        border-radius: 0.9rem;
+        color: #262626;
+        position: relative; }
+        .LiveHall .chattingRecords ul li .textBox i {
+          width: 0.875rem;
+          height: 0.425rem;
+          background-image: url(../img/chat-arrowsl.png);
+          background-repeat: no-repeat;
+          background-size: 100% 100%;
+          position: absolute;
+          left: -0.4rem;
+          top: 0.05rem; }
+      .LiveHall .chattingRecords ul li.my {
+        padding: 0.375rem;
+        padding-right: 2.5rem;
+        text-align: right; }
+        .LiveHall .chattingRecords ul li.my .portrait {
+          float: right;
+          margin-right: -2rem; }
+        .LiveHall .chattingRecords ul li.my .textBox {
+          text-align: left;
+          background-color: #678eb9;
+          color: #FFF; }
+          .LiveHall .chattingRecords ul li.my .textBox i {
+            background-image: url(../img/chat-arrowsr.png);
+            left: auto;
+            right: -0.4rem;
+            top: 0.05rem; }
+      .LiveHall .chattingRecords ul li.service .textBox {
+        background-color: #ea5961;
+        color: #FFF; }
+        .LiveHall .chattingRecords ul li.service .textBox i {
+          background-image: url(../img/chat-arrowss.png); }
+  .LiveHall .sendMessage {
+    background-color: #f5f5f5;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0; }
+    .LiveHall .sendMessage .box {
+      min-height: 1.45rem;
+      padding: 0.5rem 2.75rem 0.5rem 2.25rem; }
+      .LiveHall .sendMessage .box .faceIco {
+        float: left;
+        font-size: 1.35rem;
+        line-height: 1.15;
+        color: #9696a2;
+        margin-left: -1.75rem; }
+      .LiveHall .sendMessage .box .textInput {
+        display: block;
+        background-color: #FFF;
+        border: 1px solid #92929e;
+        min-height: 100%;
+        border-radius: 0.15rem;
+        line-height: 1.5rem;
+        font-size: 0.6rem; }
+      .LiveHall .sendMessage .box .sendBtn {
+        width: 2.0rem;
+        color: #074470;
+        text-align: center;
+        margin-right: -2.5rem;
+        float: right;
+        height: 100%;
+        line-height: 1.5rem;
+        font-size: 0.6rem;
+     color: #fff;
+    background-color: #074470; border-radius: 5px; 
+}
+    .LiveHall .sendMessage .faceList {
+      background-color: rgba(0, 0, 0, 0.1);
+      overflow: hidden; padding: 5px 0;}
+      .LiveHall .sendMessage .faceList dd {
+        float: left;
+        width: 9%;
+        text-align: center; padding: 10px; }
+        .LiveHall .sendMessage .faceList dd img {
+          width: 80%;
+          position: relative;
+          top: 15s%;
+          transform: translateY(-50%); }
+
+@media (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) {
+  html {
+    font-size: 23.4px; } }
+@media (min-device-width: 414px) and (max-device-width: 736px) and (-webkit-min-device-pixel-ratio: 3) {
+  html {
+    font-size: 25.8px; } }
+.popupWindow {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999; }
+.popupWindow .hint {
+    background-color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    position: absolute;
+    width: 80%;
+    margin: 0 10%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 0.25rem;
+    font-size: 0.75rem; }
+    .popupWindow .hint .title {
+      padding-top: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: bold; }
+    .popupWindow .hint .text {
+      padding: 0.5rem; }
+    .popupWindow .hint .btnBox {
+      border-top: 1px solid #999;
+      font-size: 0; }
+      .popupWindow .hint .btnBox a {
+        width: 49.5%;
+        display: inline-block;
+        font-size: 0.75rem;
+        line-height: 2rem; }
+        .popupWindow .hint .btnBox a.btn01 {
+          border-right: 1px solid #999;
+          color: #C00; }
+       .popupWindow .hint .btnBox a.btn02 {
+          color: #06C; }
+            
+.member{ width: 95%; margin: 0 auto; }
+.member .box{  text-align: left;  text-align:center; margin:0 auto; color: #ff3701;  border-radius:5px; border:1px #ececec solid; margin-top: 10px; background:#FFF;  }
+
+.member  input{vertical-align: middle;line-height: normal; border:none; outline:none; list-style:none; background:none; -webkit-tap-highlight-color:rgba(255,0,0,0);}
+.member p {height:50px; line-height:50px;  display: block; border-bottom:#ececec 1px solid; padding: 0 10px}
+.member p .text {  color:#000; font-size:16px; color:#555; line-height: 30px; padding: 10px 0; width:100%; float: left;  }
+.member p .send { float: right; width:100px; height:40px; background: #923c3d; color: #fff; line-height: 40px; border: 0; border-radius:5px; text-align: center; font-size: 16px; margin-top: 5px;}
+.member p .nosend { float: right; width:100px; height:40px; background: #c0c0c0; color: #666; line-height: 40px; border: 0; border-radius:5px; text-align: center; font-size: 16px; margin-top: 5px;}
+.member .dobind { clear: both; width: 100%; margin: 0 auto; margin-top: 20px; background-color: #ff512f; color: #fff; font-size: 20px; text-align: center; height: 50px; }
+.member .cbox { background: #fff; margin-top: 10px; width: 100%; color:#999; border-radius:5px; border:#ececec 1px solid; }
+.member .doreg { float: left; padding-top: 10px;}
+.member .doreg a { color:#ff512f; font-size: 16px;}
+.cr { clear: both;}
+.submit { display: block; float: none; clear: both; width: 100%; margin: 0 auto; margin-top: 20px; background: #074470; color: #fff; font-size: 20px; text-align: center; height: 50px; border-radius:5px; border: 0; line-height: 50px;}            
+.topNav .nav {   width: 3.325rem; float: left; height: 23px; background: url(../img/nav.png) no-repeat; background-size: 32px; margin-top: 10px; margin-left: 10px;  }
+.nav .list { position: absolute; top: 40px; width: 100px; background: #022844;  z-index: 10000; left: 8px;  }    
+.nav .list p { border-bottom: 1px #02203a solid; height: 35px; line-height: 35px; text-align: center; color: #fff; font-size: 14px; }                  
+           
+.header{
+    background: #67747a none repeat scroll 0 0;
+    color: #fff; 
+    font-size: 14px;
+    font-weight: bold;
+    height: 1.8rem;
+    line-height: 1.8rem; 
+    text-align: center;
+ }
+ 
+ 
+ 
