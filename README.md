@@ -76,10 +76,7 @@
 	- 若要修改上述默认目录，请修改app/config/config.lua中的upload_config.dir和nginx配置文件中的$static_files_path的值，保证两个值一致
  
  
-- 为了省事,项目存放目录 /data/cluster/web/src/html/openresty/im    
-
-
- 
+- 为了省事,建议项目直接解压在 /data/cluster/web/src/html/openresty/ 目录下
 
 
 
