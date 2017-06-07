@@ -1,38 +1,6 @@
---[[
--- /usr/local/openresty/lualib/resty/push.lua
--- push.lua ，resty.push 基于nginx_lua的push推送方案
--- 支持多对多频道 
--- 支持long-pooling, stream, websocket
---
--- Author: chuyinfeng.com <Liujiaxiong@kingsoft.com> 
--- 2014.03.12
---]]
-
---[[
-- @desc   lua数据输出
-- @param  string   字符串 
-- return  string
---]]
-function dump(v) 
-    if not __dump then
-        function __dump(v, t, p)    
-            local k = p or "";
-
-            if type(v) ~= "table" then
-                table.insert(t, k .. " : " .. tostring(v));
-            else
-                for key, value in pairs(v) do
-                    __dump(value, t, k .. "[" .. key .. "]");
-                end
-            end
-        end
-    end 
-    local t = {'======== Lib:Dump Content ========'};
-    __dump(v, t);
-    print(table.concat(t, "\n")); 
-end
-local _M = {_VERSION = '0.01'}
  
+local _M = {_VERSION = '0.01'}
+
 -- 配置信息
 _M.config = {
     -- 推送间隔，1s
@@ -48,7 +16,7 @@ _M.config = {
     -- 共享内存名
     ['store_name'] = 'push',
     -- 频道号
-    ['channels'] = {1, 2}, 
+    ['channels'] = {1000, 2000}, 
     --当前读取位置
     ['idx_read'] = 0,
 }
@@ -111,9 +79,8 @@ local function _write(store, channel_id, channel_timeout, msg, msg_lefttime, msg
         store:replace(channel_id, idx, channel_timeout)
     end
 
-    -- 写入消息
-    -- dump("写消息  m" .. channel_id .. idx .. "<--- , lefttime: " .. msg_lefttime.. " , msg: " .. msg)
-    ok, err = store:set('m' .. channel_id .. idx, msg,  msg_lefttime)  --[[设置消息 拼接上频道自增id 1  存下了消息]]--
+    -- 写入消息 
+    ok, err = store:set('m' .. channel_id .. idx, msg,  msg_lefttime)  
     if err then return 0 end
 
     -- 清除队列之前的旧消息
@@ -128,25 +95,25 @@ end
 -- 从频道读取消息 
 -- @param int channel_id, 必须为整形，可用ngx.crc32_long生成
 -- @param int msglist_len，消息队列长度 暂未使用
--- @return int idx_read,  当前读取位置
+-- @param int idx_read,  当前读取位置
 -- @return  idx_read, idx_msg, string msg, 消息  
 --]]
 local _read = function (store, channel_id, msglist_len, idx_read) 
     local msg = nil; 
     local idx_read = tonumber(idx_read)  
-    local idx_new_msg, _ = store:get(channel_id)     -- 获取最新消息的位置
+    local idx_new_msg, _ = store:get(channel_id)   
     idx_new_msg = tonumber(idx_new_msg) or 0
 
-    if idx_read <= 0 then --  只要发现偏移为0就将其设为最新
+    if idx_read <= 0 then 
         idx_read = idx_new_msg 
     end
 
     if idx_read < idx_new_msg  then
         idx_read = idx_read + 1
         msg, _ = store:get('m' .. channel_id .. idx_read) 
-    end    
+    end
  
-    return idx_read, idx_new_msg, msg  -- 返回读的位置和消息的最大位置，以及消息
+    return idx_read, idx_new_msg, msg 
 end
 
 --[[
@@ -170,17 +137,15 @@ _M.push = function(self, wrapper)
             while flag_read do
                 idx_read, idx_new_msg, msg = _read(self.store, self.config['channels'][i], self.config['msglist_len'], idx_read)
                 
-			    if (idx_new_msg <= 1)  or (idx_read > idx_new_msg) then
-			        -- 1. 频道超时之后发生此情况，读取位置比当前最新消息位置还要大 
-			        -- 让其等于0
+			    if (idx_new_msg <= 1)  or (idx_read > idx_new_msg) then 
 			        idx_read = 0
 			    end 
 				
                 if msg ~= nil and  idx_read > tonumber(self['idx_read']) then
                     time_last_msg = ngx.time(); 
-                    msg = cjson.decode(msg); 
-                    msg['idx_read'] = idx_read; --读的位置
-                    msg['idx_new_msg'] = idx_new_msg; --消息的最大位置
+                    msg = cjson.decode(msg);  --正式线上,可以在return后包装这些信息
+                    msg['idx_read'] = idx_read; 
+                    msg['idx_new_msg'] = idx_new_msg;  
                     msg['response_timeline'] = time_last_msg; 
                     msg['status'] = 1 
                     array_push(res, msg); 
@@ -196,6 +161,7 @@ _M.push = function(self, wrapper)
         end  --end for
  
         if #res > 0 then
+            flag_work = false
             time_last_msg = ngx.time();
             wrapper(res);
         end
@@ -207,11 +173,13 @@ _M.push = function(self, wrapper)
         ngx.sleep(self.config['push_interval'])  
     end 
     
-    return idx_read   --即便是超时也要把当前最新的偏移告诉客户端
+    return idx_read   --即便是超时也返回当前最新的偏移
 end
 
 --[[
 -- 发送消息到指定频道
+-- @param string  msg，消息
+-- @return  idx  当前写入最新id
 --]]
 _M.send = function(self, msg) 
     local idx = 0
@@ -223,6 +191,9 @@ end
 
 --[[
 -- jsonp格式化
+-- @param string  json   数据 
+-- @param string  cb，   函数名
+-- @return  string  cb(json)  or  json
 --]]
 _M.jsonp = function(self, data, cb)
         if cb then
