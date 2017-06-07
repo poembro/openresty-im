@@ -61,32 +61,32 @@ $( function(){
          },
          typeFace : function(){    //切换工具栏目 并绑定事件 
                 $('#face_box .exp_hd li').click(function () {
-                        var self = $(this);
-                        var i = self.data('i'); 
-                         $("#face_box .exp_hd li, #face_box .exp_bd div").each(function(){
-                                $(this).removeClass('active');//先抹去所有的 选中状态
-                         });
-          
-                        self.addClass('active'); //本次的为选中状态
-                        $('#face_box .exp_bd div').eq(i).addClass('active');  
-                        _.auto();
+                    var self = $(this);
+                    var i = self.data('i'); 
+                     $("#face_box .exp_hd li, #face_box .exp_bd div").each(function(){
+                            $(this).removeClass('active');//先抹去所有的 选中状态
+                     });
+      
+                    self.addClass('active'); //本次的为选中状态
+                    $('#face_box .exp_bd div').eq(i).addClass('active');  
+                    _.auto();
                 });  
                  
                 //表情  
                 $('#face_box_qq a').click(function () {
-                        _.face.getOneFace(this);
+                    _.face.getOneFace(this);
                 });
                 
                 //图片
                 $('#face_box_pic_file').live("change", function () {
-                        _.upload.on(this); 
-                      $('#face_box_pic_file').replaceWith($('#face_box_pic_file').clone(true)); 
+                      _.upload.on(this); 
+                     $('#face_box_pic_file').replaceWith($('#face_box_pic_file').clone(true)); 
                 });
                  
                 //语音
                 $('#face_box_audio_file').live("change", function () {
-                        _.upload.on(this); 
-                       $('#face_box_pic_file').replaceWith($('#face_box_pic_file').clone(true)); 
+                      _.upload.on(this); 
+                      $('#face_box_pic_file').replaceWith($('#face_box_pic_file').clone(true)); 
                 }); 
          },
          getOneFace : function(self){
@@ -172,39 +172,39 @@ $( function(){
        }
     
       
-       _.comet = {
-                msg_index : 0,
-            init:function (){
-                     var self = this; 
-                       $('#btn_send').click(function(){
-                        self.send(); 
-                        $('.face_box').addClass("hide");
-                   });  
-                   _.comet.sub();
-                   return true;
-            },
-            fun : function (res){
-                // console.log(res); 
-                 var self = this;  
-                 if (res)
-                 {
-                     for (var i = 0; i < res.length; i++) {
-                       // console.log(i+":"+res[i]); 
-                          if (res[i]['status'] > 0) {
-                             var data = res[i] ;// JSON.stringify(res['data']) ;  
-                             _.websocket.render(data);
-                          }
+    _.comet = {
+        msg_index : 0,
+        init:function (){
+            var self = this; 
+            $('#btn_send').click(function(){
+                self.send(); 
+                $('.face_box').addClass("hide");
+            });  
+            _.comet.sub();
+            return true;
+        },
+        fun : function (res){
+            // console.log(res); 
+            var self = this;  
+            if (res)
+            {
+                for (var i = 0; i < res.length; i++) {
+                   // console.log(i+":"+res[i]); 
+                    if (res[i]['status'] > 0) {
+                        var data = res[i] ;// JSON.stringify(res['data']) ;  
+                            _.render.show(data);
+                        }
                           
-                          if (res[i]['idx_read'] > 0) {
-                              self['msg_index'] = res[i]['idx_read'];
-                          }
+                        if (res[i]['idx_read'] > 0) {
+                            self['msg_index'] = res[i]['idx_read'];
+                        }
                     };
-                 }
-                 return true;
-            },  
-            sub : function(){
-                var self = this; 
-                var ajaxTimeoutTest =  $.ajax({
+            }
+                return true;
+        },  
+        sub : function(){
+            var self = this; 
+            var ajaxTimeoutTest =  $.ajax({
                     type : "GET",
                     url :"/comet/sub",
                     global: true, //希望产生全局的事件
@@ -248,9 +248,9 @@ $( function(){
                 return true;
             },
             send : function(picture){      //发送消息
-                 var  data = {}; 
-                 var self = this; 
-                 var msg = $('#editArea').html(); //拿到输入框内容
+                var  data = {}; 
+                var self = this; 
+                var msg = $('#editArea').html(); //拿到输入框内容
                     data["ret"]  = 0; //0 发送成功
                     data["pic"]  = 0; 
                     data["roomid"]  = IM['data']['roomid'];
@@ -304,15 +304,15 @@ $( function(){
                         	//console.log(res);
                         	//console.log(status);
                         	//console.log(errors);
-                        },
-                        complete:function(){
-                        	return console.log('发送成功');
-                        }
-                    }); 
-                        
-                     $('#editArea').html(""); 
-                     return true;
+                    },
+                    complete:function(){
+                  	return console.log('发送成功');
                  }
+            }); 
+                        
+            $('#editArea').html(""); 
+            return true;
+        }
     }
     
     
@@ -322,11 +322,10 @@ $( function(){
                    var self = this; 
                     self.connect();
                    setInterval(function (){
-                       if (self['ws'] === null){
-                            //console.log('正在连接');
+                       if (self['ws'] === null){ 
                             self.connect();
                        }
-                       //console.log('已经连接');
+                       
                      }, 3000);  
                     
                    $('#btn_send').click(function(){ 
@@ -346,7 +345,7 @@ $( function(){
                     } 
                     self['ws'].onmessage = function(event) {
                         var data = eval(event.data) ;
-                         self.render( JSON.parse(data[2]) );
+                        _.render.show( JSON.parse(data[2]) );
                     }
                     self['ws'].onclose = function() {
                         //console.log("已经和服务器断开");
@@ -360,9 +359,9 @@ $( function(){
                 return self['ws'];
             },
             send : function(picture){//发送消息
-                   var self = this; 
-                  var  data = {}; 
-                    if (self['ws'] != null && self['ws'].readyState == 1) {
+                var self = this; 
+                var  data = {}; 
+                if (self['ws'] != null && self['ws'].readyState == 1) {
                     var msg = $('#editArea').html(); //拿到输入框内容
                         data["ret"]  = 0; //0 发送成功
                         data["pic"]  = 0;
@@ -398,104 +397,113 @@ $( function(){
                     //console.log("当前没有连接服务器")
                 }
                 return false;
-            }, 
-            render : function(data){ //渲染消息 
-                    var self = this; 
-                    var res =data; 
-                    var html = null; 
-                    res['response_timeline'] = new Date(parseInt(res['response_timeline']) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");  
-                    if (res['msg'] && (res['msg']).length > 2){
-                        res['msg'] = _.face.handleface( res['msg'] );
-                    }
-                    
-                    if (res['uid'] == IM['data']['user']['uid']){
-                        //我自己说的话
-                        html = self.message_me(IM['data']['user']['face'], IM['data']['user']['nickname'],  res['response_timeline'] , res['msg'], res['pic']);
-                    }else{ 
-                       //别人发消息给我的模板
-                        html =     self.message(res['me']['face'], res['me']['nickname'],  res['response_timeline'] , res['msg'], res['pic']);
-                    }
-                    //插入新消息
-                    var messageList = $("#messageList")
-                    messageList.append(html); 
-                     
-                    //判断长度 是否需要删除 
-                    if (messageList.children().length > 26) {
-                          messageList.children().first().remove(); 
-                    }
-                    
-                    //修改图片高度
-                    if (res['pic'] && (res['pic']).length > 5){
-                        // var lastElement = messageList.children().last();
-                        //console.log(lastElement);
-                         //   heightNum = lastElement.children('.content').children('.bubble').children('.bubble_cont').children('.picture').children('.msg-img').height();
-                        // lastElement.height(200); 
-                    }
-                    _.auto();
-            },  
-            message : function (face, nickname, time, msg, ispic){ //别人发消息给我的模板； 
-                var str = '<div class="message">  ';
-                 str += '        <img src="'+face+'" class="avatar">  ';
-                 str += '        <div class="content">  ';
-                 str += '             <div class="nickname">'+nickname+'<span class="time">'+time+'</span></div> '; 
-                 str += '             <div class="bubble bubble_default left">  ';
-                 str += '                <div class="bubble_cont">  '; 
-                    if (ispic && ispic.length > 5){
-                      str += '<div style="min-height:10px;"  class="picture" onclick="window._.alert(this.innerHTML);">  ';
-                    
-                       str += '<img  src="'+ispic+'" class="msg-img">  ';
-                     
-                      str += ' </div> ';
-                   } 
-                   if (msg.length > 0){
-                       str += '         <div class="plain">  ';
-                       str += '                <pre>'+msg+'</pre>';  
-                       str += '            </div>  ';
-                   } 
-                str += '                 </div>  ';
-                str += '             </div>  ';
-                str += '          </div> '; 
-                str += '     </div>';
-               return str;
-            }, 
-            message_me : function (face,nickname, time, msg, ispic){ //我自己发消息模板； 
-                var str = '<div class="message me">  ';
-                  str += ' <img src="'+face+'" class="avatar">  ';
-                  str += '<div class="content">  ';
-                  str += '    <div class="nickname"><span class="time">'+time+'    '+ nickname +'</span></div>  ';
-                  str += '     <div class="bubble bubble_primary right">  ';
-                  str += '       <div class="bubble_cont">  ';
-                    if (ispic && ispic.length > 5){
-                          str += '<div style="min-height:10px;"  class="picture" onclick="window._.alert(this.innerHTML);">  ';
-                          str += '<img  src="'+ispic+'" class="msg-img">  ';
-                          str += ' </div> ';
-                  } 
-                   if (msg.length > 0){
-                           str += '         <div class="plain">  ';
-                           str += '                <pre>'+msg+'</pre>';  
-                           str += '            </div>  ';
-                  } 
-                  str += '         </div>  ';
-                  str += '      </div>  ';
-                  str += '   </div>  ';
-                  str += '  </div>';
-                      return str;
+            } 
+   }
+    
+   _.render = {
+    	 show : function(data){ //渲染消息 
+              var self = this; 
+              var res =data; 
+              var html = null; 
+              res['response_timeline'] = new Date(parseInt(res['response_timeline']) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");  
+              if (res['msg'] && (res['msg']).length > 2){
+                  res['msg'] = _.face.handleface( res['msg'] );
+              }
+              
+              if (res['uid'] == IM['data']['user']['uid']){
+                  //我自己说的话
+                  html = self.message_me(IM['data']['user']['face'], IM['data']['user']['nickname'],  res['response_timeline'] , res['msg'], res['pic']);
+              }else{
+                 //别人发消息给我的模板
+                  html = self.message(res['me']['face'], res['me']['nickname'],  res['response_timeline'] , res['msg'], res['pic']);
+              }
+              //插入新消息
+              var messageList = $("#messageList")
+              messageList.append(html); 
+               
+              //判断长度 是否需要删除 
+              if (messageList.children().length > 26) {
+                    messageList.children().first().remove(); 
+              }
+              
+              //修改图片高度
+              if (res['pic'] && (res['pic']).length > 5){
+                  // var lastElement = messageList.children().last();
+                  //console.log(lastElement);
+                   //   heightNum = lastElement.children('.content').children('.bubble').children('.bubble_cont').children('.picture').children('.msg-img').height();
+                  // lastElement.height(200); 
+              }
+              _.auto();
+         },  
+          message : function (face, nickname, time, msg, ispic){ //别人发消息给我的模板； 
+              var str = '<div class="message">  ';
+               str += '        <img src="'+face+'" class="avatar">  ';
+               str += '        <div class="content">  ';
+               str += '             <div class="nickname">'+nickname+'<span class="time">'+time+'</span></div> '; 
+               str += '             <div class="bubble bubble_default left">  ';
+               str += '                <div class="bubble_cont">  '; 
+                  if (ispic && ispic.length > 5){
+                    str += '<div style="min-height:10px;"  class="picture" onclick="window._.alert(this.innerHTML);">  ';
+                  
+                     str += '<img  src="'+ispic+'" class="msg-img">  ';
+                   
+                    str += ' </div> ';
+                 } 
+                 if (msg.length > 0){
+                     str += '         <div class="plain">  ';
+                     str += '                <pre>'+msg+'</pre>';  
+                     str += '            </div>  ';
+                 } 
+              str += '                 </div>  ';
+              str += '             </div>  ';
+              str += '          </div> '; 
+              str += '     </div>';
+             return str;
+          }, 
+          message_me : function (face,nickname, time, msg, ispic){ //我自己发消息模板； 
+              var str = '<div class="message me">  ';
+                str += ' <img src="'+face+'" class="avatar">  ';
+                str += '<div class="content">  ';
+                str += '    <div class="nickname"><span class="time">'+time+'    '+ nickname +'</span></div>  ';
+                str += '     <div class="bubble bubble_primary right">  ';
+                str += '       <div class="bubble_cont">  ';
+                
+                if (ispic && ispic.length > 5){
+                        str += '<div style="min-height:10px;"  class="picture" onclick="window._.alert(this.innerHTML);">  ';
+                        str += '<img  src="'+ispic+'" class="msg-img">  ';
+                        str += ' </div> ';
                 }
-   } 
+                
+                if (msg.length > 0){
+                         str += '         <div class="plain">  ';
+                         str += '                <pre>'+msg+'</pre>';  
+                         str += '            </div>  ';
+                } 
+                str += '         </div>  ';
+                str += '      </div>  ';
+                str += '   </div>  ';
+                str += '  </div>';
+               return str;
+          }
+    } 
         
    _.oldMessageLog = function () {
-        var oldmessage = IM['data']['oldmessage'];
-       if (oldmessage) {
-          for (var index in oldmessage) {
-             if (oldmessage[index]['suid'] == IM['data']['user']['uid']){
-                   //自己说的话 
-                   oldmessage[index]['me'] =  IM['data']['user'];
-                   _.websocket.render(oldmessage[index]); 
-	          }else{
-	               //别人发消息给我的模板； 
-	               _.websocket.render(oldmessage[index]); 
-	           }
-          }
+       var oldmessage = IM['data']['oldmessage'];
+       if (! oldmessage) 
+       {
+    	   return ;
+       }
+       for (var index in oldmessage) 
+       {
+           if (oldmessage[index]['suid'] == IM['data']['user']['uid'])
+           {
+               //自己说的话 
+               oldmessage[index]['me'] =  IM['data']['user'];
+               _.render.show(oldmessage[index]); 
+           }else{
+               //别人发消息给我的模板； 
+        	   _.render.show(oldmessage[index]); 
+           }
        }
     }
  
