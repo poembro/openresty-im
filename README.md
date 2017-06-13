@@ -20,6 +20,7 @@
     [root@iZ~]#cd openresty-1.11.2.3
     ./configure --with-luajit && make && make install
 
+
     注意:  有个 resty-uuid  需要引用 libuuid.so 动态库
     打印log提示信息是这样的:
     libuuid.so: cannot open shared object file: No such file or directory
@@ -28,6 +29,10 @@
     [root@iZ~]#ln -s /lib64/libuuid.so.1.3.0 /usr/lib64/libuuid.so
     [root@iZ~]#ln -s /usr/lib64/libuuid.so /usr/local/openresty/lualib/resty/libuuid.so
     [root@iZ~]# ldconfig
+    
+    
+    [root@iZ~]#yum install ImageMagick ImageMagick-devel  # imagemagick c 库
+    [root@iZ~]#yum install GraphicsMagick-devel           # GraphicsMagick c 库
 
 ```
  
