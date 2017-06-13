@@ -37,16 +37,18 @@ local  upload_dir_thumb_img = require("app.config.config").upload_config.dir
 upload_router:post("/file", function(req, res, next)
     local file = req.file or {}
     local userid = req.me.userid;
- 
-    local thumb_imgname = upload_dir_thumb_img .. "100x100" ..file.filename
+   
+    ----裁剪 start
+    local thumb_imgname = upload_dir_thumb_img .. "100x100_" .. file.filename
     magick.thumb(file.path, "100x100", thumb_imgname)
+    ----裁剪end
  
     if file.success and file.filename then 
         ngx.log(ngx.ERR, "用户:", userid, " 上传文件:", file.filename, " 成功")
         res:json({
             success = true, 
             originFilename = upload_dir_thumb_img .. file.origin_filename,
-            filename = upload_url..file.thumb_imgname
+            filename = upload_url.. "100x100_" .. file.filename
         })
     else
         ngx.log(ngx.ERR, "用户:", userid, " 上传文件失败:", file.msg)
