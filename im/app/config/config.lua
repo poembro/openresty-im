@@ -71,7 +71,7 @@ return {
         dir = "/data/cluster/web/src/html/openresty/im/app/static/avatar/", -- 文件目录，修改此值时须同时修改nginx配置文件中的$static_files_path值
         chunk_size = 8096, 
         recieve_timeout = 20000,
-        url = "http://www.im.cn/static/avatar/"
+        url = "http://www.im.com/static/avatar/"
     },
  
 }

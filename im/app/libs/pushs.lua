@@ -53,6 +53,7 @@ _M.opt = function(self, k, v)
     self.store = ngx.shared[self.config['store_name']]
 end
 
+local resty_lock = require "resty.lock"
 
 --[[
 -- 向频道写入消息
@@ -64,30 +65,41 @@ end
 -- @param int msglist_len, 消息队列长度
 -- @return boolean
 --]]
-local function _write(store, channel_id, channel_timeout, msg, msg_lefttime, msglist_len)
-    local idx, ok, err
+local function _write(store, channel_id, channel_timeout, msg, msg_lefttime, msglist_len) 
+    local lock = resty_lock:new("channels", {exptime=5})
+    local elapsed, err = lock:lock("lock_123456")
+    if not elapsed then  return 0  end
 
+    local idx, ok, err
     -- 消息当前读取位置计数器+1
     idx, err = store:incr(channel_id, 1)  
 
     -- 如果异常，则新建频道
     if err then
         ok, err = store:set(channel_id, 1, channel_timeout) 
-        if err then return 0 end
+        if err then 
+           lock:unlock();
+           return 0
+        end
         idx = 1
     else
         store:replace(channel_id, idx, channel_timeout)
     end
 
     -- 写入消息 
-    ok, err = store:set('m' .. channel_id .. idx, msg,  msg_lefttime)  
-    if err then return 0 end
+    ok, err = store:set('m' .. channel_id .. idx, msg,  msg_lefttime)
 
+    if err then
+        lock:unlock();
+        return 0 
+    end
+    --ngx.log(ngx.ERR, 'set(m' .. channel_id .. idx, '----->' , msg, '<------',  msg_lefttime..');');
     -- 清除队列之前的旧消息
     if idx > msglist_len then
         store:delete('m' .. channel_id .. (idx - msglist_len))
     end
 
+    lock:unlock();
     return idx
 end
 
@@ -103,14 +115,21 @@ local _read = function (store, channel_id, msglist_len, idx_read)
     local idx_read = tonumber(idx_read)  
     local idx_new_msg, _ = store:get(channel_id)   
     idx_new_msg = tonumber(idx_new_msg) or 0
-
-    if idx_read <= 0 then 
-        idx_read = idx_new_msg 
+ 
+	if (idx_new_msg <= 0)  or (idx_read > idx_new_msg) then 
+	    idx_read = 0  --频道超时 客户端偏移过大
+	end 
+	 
+    if idx_new_msg - idx_read > 0 then 
+        idx_read = idx_new_msg - 1;   --中间插入进来的会员 
     end
-
+    
+    --ngx.log(ngx.ERR,  idx_read, '------> ', idx_new_msg) 
     if idx_read < idx_new_msg  then
         idx_read = idx_read + 1
         msg, _ = store:get('m' .. channel_id .. idx_read) 
+
+        --ngx.log(ngx.ERR, 'get(m' .. channel_id .. idx_read..')', msg, '消息最新位置-> ', idx_new_msg) 
     end
  
     return idx_read, idx_new_msg, msg 
@@ -136,27 +155,28 @@ _M.push = function(self, wrapper)
             flag_read = true
             while flag_read do
                 idx_read, idx_new_msg, msg = _read(self.store, self.config['channels'][i], self.config['msglist_len'], idx_read)
-                
-			    if (idx_new_msg <= 1)  or (idx_read > idx_new_msg) then 
-			        idx_read = 0
-			    end 
-				
-                if msg ~= nil and  idx_read > tonumber(self['idx_read']) then
-                    time_last_msg = ngx.time(); 
+               			
+                if (idx_read > tonumber(self['idx_read'])) then
+                   
+                   if msg then
+                   time_last_msg = ngx.time(); 
                     msg = cjson.decode(msg);  --正式线上,可以在return后包装这些信息
                     msg['idx_read'] = idx_read; 
                     msg['idx_new_msg'] = idx_new_msg;  
                     msg['response_timeline'] = time_last_msg; 
                     msg['status'] = 1 
                     array_push(res, msg); 
+                    end
                 end
+
+                self['idx_read'] = idx_read
                 
-                if idx_new_msg == idx_read then  
+                if idx_read >= idx_new_msg then  
                     --1.第一次位置都相等或者没有最新消息,退出此while...  
                     --2.消息太快某客户读的位置 与最新位置差距过大，继续读取...
                     flag_read = false
                 end 
-                
+                           
             end  --end while
         end  --end for
  
