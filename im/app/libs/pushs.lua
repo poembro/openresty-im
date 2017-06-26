@@ -1,4 +1,3 @@
- 
 local _M = {_VERSION = '0.01'}
 
 -- 配置信息
@@ -119,11 +118,11 @@ local _read = function (store, channel_id, msglist_len, idx_read)
 	if (idx_new_msg <= 0)  or (idx_read > idx_new_msg) then 
 	    idx_read = 0  --频道超时 客户端偏移过大
 	end 
-	 
+
     if idx_new_msg - idx_read > 0 then 
         idx_read = idx_new_msg - 1;   --中间插入进来的会员 
     end
-    
+
     --ngx.log(ngx.ERR,  idx_read, '------> ', idx_new_msg) 
     if idx_read < idx_new_msg  then
         idx_read = idx_read + 1
@@ -158,8 +157,8 @@ _M.push = function(self, wrapper)
                			
                 if (idx_read > tonumber(self['idx_read'])) then
                    
-                   if msg then
-                   time_last_msg = ngx.time(); 
+                    if msg then
+                    time_last_msg = ngx.time(); 
                     msg = cjson.decode(msg);  --正式线上,可以在return后包装这些信息
                     msg['idx_read'] = idx_read; 
                     msg['idx_new_msg'] = idx_new_msg;  
@@ -176,7 +175,7 @@ _M.push = function(self, wrapper)
                     --2.消息太快某客户读的位置 与最新位置差距过大，继续读取...
                     flag_read = false
                 end 
-                           
+                
             end  --end while
         end  --end for
  
@@ -216,11 +215,11 @@ end
 -- @return  string  cb(json)  or  json
 --]]
 _M.jsonp = function(self, data, cb)
-        if cb then
-            return cb .. "(" .. cjson.encode(data)  .. ");"
-        else
-            return cjson.encode(data)
-        end
+    if cb then
+        return cb .. "(" .. cjson.encode(data)  .. ");"
+    else
+        return cjson.encode(data)
+    end
 end
  
 --[[

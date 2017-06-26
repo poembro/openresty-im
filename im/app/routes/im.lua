@@ -20,7 +20,7 @@ imRouter:get("/room", function(req, res, next)
     
     local IMrand = math.random(1000, 9999)
     local IMtoken = utils.encrypted('1000'..'--||'.. IMrand ..'--||'.. userid, '123456789')
---ngx.log(ngx.ERR, "IMrand:", IMrand)
+ 
     res:render("im", {
          IMrand = IMrand,
          IMtoken = IMtoken,
