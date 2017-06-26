@@ -6,8 +6,9 @@ local user_model = require("app.model.user")
 local upload_router = lor:Router()
 local upload_url = require("app.config.config").upload_config.url
 	
-local  magick = require("magick.init")  --图片裁剪
-	
+local  magick = require("magick.init")  --图片裁剪 
+local  upload_dir_thumb_img = require("app.config.config").upload_config.dir
+
 upload_router:post("/face", function(req, res, next)
     local file = req.file or {}
     local userid = req.me.userid; 
@@ -30,8 +31,7 @@ upload_router:post("/face", function(req, res, next)
     end
 end)
 
-local  magick = require("magick.init")  --图片裁剪
-local  upload_dir_thumb_img = require("app.config.config").upload_config.dir
+
 
 
 upload_router:post("/file", function(req, res, next)

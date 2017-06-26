@@ -151,7 +151,7 @@ _M.push = function(self, wrapper)
                     array_push(res, msg); 
                 end
                 
-                if tonumber(idx_new_msg) == tonumber(idx_read) then  
+                if idx_new_msg == idx_read then  
                     --1.第一次位置都相等或者没有最新消息,退出此while...  
                     --2.消息太快某客户读的位置 与最新位置差距过大，继续读取...
                     flag_read = false
