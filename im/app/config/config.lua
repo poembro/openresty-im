@@ -27,7 +27,7 @@ return {
         topic_comment_page_size = 20, -- 文章详情页每页评论数
         notification_page_size = 10, -- 通知每页个数
     },
-    
+
     users = {
         {
             username = "test",
@@ -64,8 +64,15 @@ return {
             pool_size = 50 -- connection pool size
         },
         desc="mysql configuration" 
-    } ,
-    
+    },
+    redis = {
+        timeout = 3,            -- 3s
+        ip = "127.0.0.1",
+        port = 6379,
+        keepalive_size = 100,
+        keepalive_timeout = 60000,        -- 60s
+        passwd = '111111'
+    },
      -- 上传文件配置，如上传的头像、文章中的图片等
     upload_config = {
         dir = "/data/cluster/web/src/html/openresty/im/app/static/avatar/", -- 文件目录，修改此值时须同时修改nginx配置文件中的$static_files_path值

@@ -1,5 +1,5 @@
-$( function(){
-     var _ = {}; 
+$(function(){
+    var _ = {}; 
     _.init = function() {
         var self = this;
         _.face.init(); //工具处理   
@@ -317,174 +317,174 @@ $( function(){
     
     
     _.websocket = {
-            ws : null,
-            init : function(){
-                   var self = this; 
-                    self.connect();
-                   setInterval(function (){
-                       if (self['ws'] === null){ 
-                            self.connect();
-                       }
-                       
-                     }, 3000);  
-                    
-                   $('#btn_send').click(function(){ 
-                        self.send();
-                        $('.face_box').addClass("hide");
-                   }); 
-            }, 
-            connect : function(){ //连接 
-                var self = this;
-                if (self['ws'] != null && self['ws'].readyState == 1) {
-                    return self['ws'];
-                } 
-                if ("WebSocket" in window) {
-                    self['ws'] = new WebSocket( IM['data']['socket']); 
-                    self['ws'].onopen = function() {
-                        //console.log('成功进入聊天室');
-                    } 
-                    self['ws'].onmessage = function(event) {
-                        var data = eval(event.data) ;
-                        _.render.show( JSON.parse(data[2]) );
-                    }
-                    self['ws'].onclose = function() {
-                        //console.log("已经和服务器断开");
-                    } 
-                    self['ws'].onerror = function(event) {
-                        //console.log("error " + event.data);
-                    }
-                } else {
-                    _.alert("你的浏览器不支持 WebSocket!");
-                }
+        ws : null,
+        init : function(){
+               var self = this; 
+                self.connect();
+               setInterval(function (){
+                   if (self['ws'] === null){ 
+                        self.connect();
+                   }
+                   
+                 }, 3000);  
+                
+               $('#btn_send').click(function(){ 
+                    self.send();
+                    $('.face_box').addClass("hide");
+               }); 
+        }, 
+        connect : function(){ //连接 
+            var self = this;
+            if (self['ws'] != null && self['ws'].readyState == 1) {
                 return self['ws'];
-            },
-            send : function(picture){//发送消息
-                var self = this; 
-                var  data = {}; 
-                if (self['ws'] != null && self['ws'].readyState == 1) {
-                    var msg = $('#editArea').html(); //拿到输入框内容
-                        data["ret"]  = 0; //0 发送成功
-                        data["pic"]  = 0;
-                        data["roomid"]  = IM['data']['roomid'];
-                        data["uid"]  = IM['data']['user']['uid']; 
-                        
-                        data["touid"] = (IM['data']['to']) && (IM['data']['to']['uid']) ? IM['data']['to']['uid'] : 0 ; 
-                        
-                        data["me"]   = IM['data']['user'];
-                        if (picture && picture.length > 5){
-                             data["pic"]  = picture;  
-                        }
-                        if ($.trim(msg) == "" || (msg.length < 1 ) ) {
-                            if (data["pic"] == 0) {
-                                 _.alert('请输入内容再发送');
-                                 return false;
-                            }
-                        }
-                        data["msg"]  = msg; 
-                        self['ws'].send(JSON.stringify(data));
-                } else {
-                        //console.log('请先进入聊天室');
-                } 
-                 $('#editArea').html("");
-                 return true;
-            }, 
-            close : function(){     //关闭 
-                var self = this;
-                if (self['ws'] != null && self['ws'].readyState == 1) {
-                    self['ws'].close();
-                    //console.log("发送断开服务器请求");
-                } else {
-                    //console.log("当前没有连接服务器")
-                }
-                return false;
             } 
+            if ("WebSocket" in window) {
+                self['ws'] = new WebSocket( IM['data']['socket']); 
+                self['ws'].onopen = function() {
+                    //console.log('成功进入聊天室');
+                } 
+                self['ws'].onmessage = function(event) {
+                    var data = eval(event.data) ;
+                    _.render.show( JSON.parse(data[2]) );
+                }
+                self['ws'].onclose = function() {
+                    //console.log("已经和服务器断开");
+                } 
+                self['ws'].onerror = function(event) {
+                    //console.log("error " + event.data);
+                }
+            } else {
+                _.alert("你的浏览器不支持 WebSocket!");
+            }
+            return self['ws'];
+        },
+        send : function(picture){//发送消息
+            var self = this; 
+            var  data = {}; 
+            if (self['ws'] != null && self['ws'].readyState == 1) {
+                var msg = $('#editArea').html(); //拿到输入框内容
+                    data["ret"]  = 0; //0 发送成功
+                    data["pic"]  = 0;
+                    data["roomid"]  = IM['data']['roomid'];
+                    data["uid"]  = IM['data']['user']['uid']; 
+                    
+                    data["touid"] = (IM['data']['to']) && (IM['data']['to']['uid']) ? IM['data']['to']['uid'] : 0 ; 
+                    
+                    data["me"]   = IM['data']['user'];
+                    if (picture && picture.length > 5){
+                         data["pic"]  = picture;  
+                    }
+                    if ($.trim(msg) == "" || (msg.length < 1 ) ) {
+                        if (data["pic"] == 0) {
+                             _.alert('请输入内容再发送');
+                             return false;
+                        }
+                    }
+                    data["msg"]  = msg; 
+                    self['ws'].send(JSON.stringify(data));
+            } else {
+                    //console.log('请先进入聊天室');
+            } 
+             $('#editArea').html("");
+             return true;
+        }, 
+        close : function(){     //关闭 
+            var self = this;
+            if (self['ws'] != null && self['ws'].readyState == 1) {
+                self['ws'].close();
+                //console.log("发送断开服务器请求");
+            } else {
+                //console.log("当前没有连接服务器")
+            }
+            return false;
+        } 
    }
     
    _.render = {
-    	 show : function(data){ //渲染消息 
-              var self = this; 
-              var res =data; 
-              var html = null; 
-              res['response_timeline'] = new Date(parseInt(res['response_timeline']) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");  
-              if (res['msg'] && (res['msg']).length > 2){
-                  res['msg'] = _.face.handleface( res['msg'] );
-              }
+	 show : function(data){ //渲染消息 
+          var self = this; 
+          var res =data; 
+          var html = null; 
+          res['response_timeline'] = new Date(parseInt(res['response_timeline']) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");  
+          if (res['msg'] && (res['msg']).length > 2){
+              res['msg'] = _.face.handleface( res['msg'] );
+          }
+          
+          if (res['uid'] == IM['data']['user']['uid']){
+              //我自己说的话
+              html = self.message_me(IM['data']['user']['face'], IM['data']['user']['nickname'],  res['response_timeline'] , res['msg'], res['pic']);
+          }else{
+             //别人发消息给我的模板
+              html = self.message(res['me']['face'], res['me']['nickname'],  res['response_timeline'] , res['msg'], res['pic']);
+          }
+          //插入新消息
+          var messageList = $("#messageList")
+          messageList.append(html); 
+           
+          //判断长度 是否需要删除 
+          if (messageList.children().length > 26) {
+                messageList.children().first().remove(); 
+          }
+          
+          //修改图片高度
+          if (res['pic'] && (res['pic']).length > 5){
+              // var lastElement = messageList.children().last();
+              //console.log(lastElement);
+               //   heightNum = lastElement.children('.content').children('.bubble').children('.bubble_cont').children('.picture').children('.msg-img').height();
+              // lastElement.height(200); 
+          }
+          _.auto();
+     },  
+      message : function (face, nickname, time, msg, ispic){ //别人发消息给我的模板； 
+          var str = '<div class="message">  ';
+           str += '        <img src="'+face+'" class="avatar">  ';
+           str += '        <div class="content">  ';
+           str += '             <div class="nickname">'+nickname+'<span class="time">'+time+'</span></div> '; 
+           str += '             <div class="bubble bubble_default left">  ';
+           str += '                <div class="bubble_cont">  '; 
+              if (ispic && ispic.length > 5){
+                str += '<div style="min-height:10px;"  class="picture" onclick="window._.alert(this.innerHTML);">  ';
               
-              if (res['uid'] == IM['data']['user']['uid']){
-                  //我自己说的话
-                  html = self.message_me(IM['data']['user']['face'], IM['data']['user']['nickname'],  res['response_timeline'] , res['msg'], res['pic']);
-              }else{
-                 //别人发消息给我的模板
-                  html = self.message(res['me']['face'], res['me']['nickname'],  res['response_timeline'] , res['msg'], res['pic']);
-              }
-              //插入新消息
-              var messageList = $("#messageList")
-              messageList.append(html); 
+                 str += '<img  src="'+ispic+'" class="msg-img">  ';
                
-              //判断长度 是否需要删除 
-              if (messageList.children().length > 26) {
-                    messageList.children().first().remove(); 
-              }
-              
-              //修改图片高度
-              if (res['pic'] && (res['pic']).length > 5){
-                  // var lastElement = messageList.children().last();
-                  //console.log(lastElement);
-                   //   heightNum = lastElement.children('.content').children('.bubble').children('.bubble_cont').children('.picture').children('.msg-img').height();
-                  // lastElement.height(200); 
-              }
-              _.auto();
-         },  
-          message : function (face, nickname, time, msg, ispic){ //别人发消息给我的模板； 
-              var str = '<div class="message">  ';
-               str += '        <img src="'+face+'" class="avatar">  ';
-               str += '        <div class="content">  ';
-               str += '             <div class="nickname">'+nickname+'<span class="time">'+time+'</span></div> '; 
-               str += '             <div class="bubble bubble_default left">  ';
-               str += '                <div class="bubble_cont">  '; 
-                  if (ispic && ispic.length > 5){
+                str += ' </div> ';
+             } 
+             if (msg.length > 0){
+                 str += '         <div class="plain">  ';
+                 str += '                <pre>'+msg+'</pre>';  
+                 str += '            </div>  ';
+             } 
+          str += '                 </div>  ';
+          str += '             </div>  ';
+          str += '          </div> '; 
+          str += '     </div>';
+         return str;
+      }, 
+      message_me : function (face,nickname, time, msg, ispic){ //我自己发消息模板； 
+          var str = '<div class="message me">  ';
+            str += ' <img src="'+face+'" class="avatar">  ';
+            str += '<div class="content">  ';
+            str += '    <div class="nickname"><span class="time">'+time+'    '+ nickname +'</span></div>  ';
+            str += '     <div class="bubble bubble_primary right">  ';
+            str += '       <div class="bubble_cont">  ';
+            
+            if (ispic && ispic.length > 5){
                     str += '<div style="min-height:10px;"  class="picture" onclick="window._.alert(this.innerHTML);">  ';
-                  
-                     str += '<img  src="'+ispic+'" class="msg-img">  ';
-                   
+                    str += '<img  src="'+ispic+'" class="msg-img">  ';
                     str += ' </div> ';
-                 } 
-                 if (msg.length > 0){
+            }
+            
+            if (msg.length > 0){
                      str += '         <div class="plain">  ';
                      str += '                <pre>'+msg+'</pre>';  
                      str += '            </div>  ';
-                 } 
-              str += '                 </div>  ';
-              str += '             </div>  ';
-              str += '          </div> '; 
-              str += '     </div>';
-             return str;
-          }, 
-          message_me : function (face,nickname, time, msg, ispic){ //我自己发消息模板； 
-              var str = '<div class="message me">  ';
-                str += ' <img src="'+face+'" class="avatar">  ';
-                str += '<div class="content">  ';
-                str += '    <div class="nickname"><span class="time">'+time+'    '+ nickname +'</span></div>  ';
-                str += '     <div class="bubble bubble_primary right">  ';
-                str += '       <div class="bubble_cont">  ';
-                
-                if (ispic && ispic.length > 5){
-                        str += '<div style="min-height:10px;"  class="picture" onclick="window._.alert(this.innerHTML);">  ';
-                        str += '<img  src="'+ispic+'" class="msg-img">  ';
-                        str += ' </div> ';
-                }
-                
-                if (msg.length > 0){
-                         str += '         <div class="plain">  ';
-                         str += '                <pre>'+msg+'</pre>';  
-                         str += '            </div>  ';
-                } 
-                str += '         </div>  ';
-                str += '      </div>  ';
-                str += '   </div>  ';
-                str += '  </div>';
-               return str;
-          }
+            } 
+            str += '         </div>  ';
+            str += '      </div>  ';
+            str += '   </div>  ';
+            str += '  </div>';
+           return str;
+      }
     } 
         
    _.oldMessageLog = function () {
