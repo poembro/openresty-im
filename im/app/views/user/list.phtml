@@ -63,26 +63,25 @@
    }
 </style> 
 <body class="body"> 
-        <header class="topNav"> 
+        <header class="topNav" onclick="window.location.href='/';">  
             <h1 class="title">用户列表</h1> 
         </header>
  
        <div class="member"> 
-       
-                <ul> 
-                	{% if userall then %}
+           <ul> 
+            	{% if userall then %}
 	                 {% for _, v in pairs(userall) do %}  
 	                    
-    	                    <li style="line-height: 1.5rem; overflow: hidden;"> 
-                                  <div style="float: left; width:50px;"><img   alt="头像" src="/static/wap/img/portrait.jpg"> </div> 
-                                  <div style="float:right;"><a href="##">{{v['uid']}} -- {{v['nickname']}} </a></div>  
-                            </li>
-                          
+	                    <li style="line-height: 1.5rem; overflow: hidden;"> 
+                              <div style="float: left; width:50px;"><img   alt="头像" src="/static/wap/img/portrait.jpg"> </div> 
+                              <div style="float:right;"><a href="##">{{v['uid']}} -- {{v['nickname']}} </a></div>  
+                        </li>
+                      
 	                  {% end %}
-	                {% end %}
-                 
-                 </ul>    
-            
+	             {% end %}
+             
+           </ul>    
+       
        </div> 
        
 		{% if page then %}
