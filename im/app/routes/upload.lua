@@ -37,10 +37,11 @@ upload_router:post("/file", function(req, res, next)
     local file = req.file or {}
     local userid = req.me.userid;
  
-    local thumb_imgname = upload_dir_thumb_img .. "100x100_" .. file.filename 
-    magick.thumb(file.path, "100x100", thumb_imgname)
- 
     if file.success and file.filename then 
+ 
+        local thumb_imgname = upload_dir_thumb_img .. "100x100_" .. file.filename 
+        magick.thumb(file.path, "100x100", thumb_imgname)
+
         ngx.log(ngx.ERR, "用户:", userid, " 上传文件:", file.filename, " 成功")
         res:json({
             success = true, 

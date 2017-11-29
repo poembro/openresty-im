@@ -1,4 +1,13 @@
+-- cjson 模块
+local cjson = require "cjson"
+
 local _M = {_VERSION = '0.01'}
+-- 频道数量
+_M.channels_len = 0
+-- 当前读位置
+_M.idx_read = 0
+-- 共享内存
+_M.store = nil
 
 -- 配置信息
 _M.config = {
@@ -19,18 +28,6 @@ _M.config = {
     --当前读取位置
     ['idx_read'] = 0,
 }
-
-
--- 频道数量
-_M.channels_len = 0
--- 当前读位置
-_M.idx_read = 0
--- 共享内存
-_M.store = nil
-
-
--- cjson 模块
-local cjson = require "cjson"
 
 --[[
 -- 设置
@@ -67,7 +64,7 @@ local resty_lock = require "resty.lock"
 local function _write(store, channel_id, channel_timeout, msg, msg_lefttime, msglist_len) 
     local lock = resty_lock:new("channels", {exptime=5})
     local elapsed, err = lock:lock("lock_123456")
-    if not elapsed then  return 0  end
+    if not elapsed then return 0  end
 
     local idx, ok, err
     -- 消息当前读取位置计数器+1
@@ -103,6 +100,22 @@ local function _write(store, channel_id, channel_timeout, msg, msg_lefttime, msg
 end
 
 --[[
+-- 发送消息到指定频道
+-- @param string  msg，消息
+-- @return  idx  当前写入最新id
+--]]
+_M.send = function(self, msg)
+    local channels = self.config['channels'];
+    local channels_length = table.maxn(channels)
+    local idx = 0
+    for i = 1, channels_length do
+        idx = _write(self.store, channels[i], self.config['channel_timeout'], msg, 
+                        self.config['msg_lefttime'], self.config['msglist_len'])
+    end
+    return idx
+end
+
+--[[
 -- 从频道读取消息 
 -- @param int channel_id, 必须为整形，可用ngx.crc32_long生成
 -- @param int msglist_len，消息队列长度 暂未使用
@@ -116,11 +129,11 @@ local _read = function (store, channel_id, msglist_len, idx_read)
     idx_new_msg = tonumber(idx_new_msg) or 0
  
 	if (idx_new_msg <= 0)  or (idx_read > idx_new_msg) then 
-	    idx_read = 0  --频道超时 客户端偏移过大
+	    idx_read = 0  --频道超时 or 客户端偏移过大
 	end 
 
     if idx_new_msg - idx_read > 0 then 
-        idx_read = idx_new_msg - 1;   --中间插入进来的会员 
+        idx_read = idx_new_msg - 1;   --中途插入进来的会员 
     end
 
     --ngx.log(ngx.ERR,  idx_read, '------> ', idx_new_msg) 
@@ -139,6 +152,8 @@ end
 -- @param callback wrapper, 消息包装回调函数
 --]]
 _M.push = function(self, wrapper)
+    local channels = self.config['channels']  --这里必须用新变量 否则有缓存
+    local channels_length = table.maxn(channels) 
     local array_push = table.insert
     local flag_work = true
     local flag_read = true
@@ -150,35 +165,31 @@ _M.push = function(self, wrapper)
     local res = {}  --返回结果集 
     
     while flag_work do
-        for i = 1, self.channels_len do
+        
+        for i = 1, channels_length do
             flag_read = true
             while flag_read do
-                idx_read, idx_new_msg, msg = _read(self.store, self.config['channels'][i], self.config['msglist_len'], idx_read)
-               			
-                if (idx_read > tonumber(self['idx_read'])) then
-                   
-                    if msg then
-                    time_last_msg = ngx.time(); 
-                    msg = cjson.decode(msg);  --正式线上,可以在return后包装这些信息
-                    msg['idx_read'] = idx_read; 
-                    msg['idx_new_msg'] = idx_new_msg;  
-                    msg['response_timeline'] = time_last_msg; 
-                    msg['status'] = 1 
-                    array_push(res, msg); 
-                    end
+                idx_read, idx_new_msg, msg = _read(self.store, channels[i],
+                    self.config['msglist_len'], idx_read)
+                   			
+                if msg then
+    	            time_last_msg = ngx.time(); 
+    	            msg = cjson.decode(msg);  --正式线上,可以在return后包装这些信息
+    	            msg['idx_read'] = idx_read; 
+    	            msg['idx_new_msg'] = idx_new_msg;  
+    	            msg['response_timeline'] = time_last_msg; 
+    	            msg['status'] = 1 
+    	            array_push(res, msg); 
                 end
-
-                self['idx_read'] = idx_read
-                
+                    
                 if idx_read >= idx_new_msg then  
-                    --1.第一次位置都相等或者没有最新消息,退出此while...  
-                    --2.消息太快某客户读的位置 与最新位置差距过大，继续读取...
+                        --1.第一次位置都相等或者没有最新消息,退出此while...  
+                        --2.消息太快某客户读的位置 与最新位置差距过大，继续读取...
                     flag_read = false
                 end 
-                
             end  --end while
-        end  --end for
- 
+        end --end for
+
         if #res > 0 then
             flag_work = false
             time_last_msg = ngx.time();
@@ -195,18 +206,7 @@ _M.push = function(self, wrapper)
     return idx_read   --即便是超时也返回当前最新的偏移
 end
 
---[[
--- 发送消息到指定频道
--- @param string  msg，消息
--- @return  idx  当前写入最新id
---]]
-_M.send = function(self, msg) 
-    local idx = 0
-    for i = 1, self.channels_len do
-        idx = _write(self.store, self.config['channels'][i], self.config['channel_timeout'], msg, self.config['msg_lefttime'], self.config['msglist_len'])
-    end
-    return idx
-end
+
 
 --[[
 -- jsonp格式化

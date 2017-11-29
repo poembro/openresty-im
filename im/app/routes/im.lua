@@ -12,20 +12,33 @@ imRouter:get("/room", function(req, res, next)
     local user, err = user_model:query_by_id(userid)
 
     if not user or err then
-       return res:json({
+        return res:json({
             success = false,
             msg = "无法查找到该用户."
         })
     end   
     
+    local roomid = 1000
+    if req.query.touid then
+ 
+        if userid == req.query.touid then
+             return res:json({
+                success = false,
+                msg = "不能和自己说."
+            })
+        end
+
+        roomid = (tonumber(req.query.touid) > tonumber(userid)) and  (userid .. req.query.touid) or  (req.query.touid .. userid)
+    end 
+
     local IMrand = math.random(1000, 9999)
     local IMtoken = utils.encrypted('1000'..'--||'.. IMrand ..'--||'.. userid, '123456789')
  
     res:render("im", {
          IMrand = IMrand,
          IMtoken = IMtoken,
-         roomid = 1000,
-         roomname = "讨论群",
+         roomid = roomid,
+         roomname = roomid,
          user =  (user),
          oldmessage = {}  
     })

@@ -12,11 +12,10 @@ end
 
 --获取URL参数
 local _GET = ngx.req.get_uri_args();
+local channel_id = _GET['roomid'] or 1000; 
+local channel_name = tonumber(channel_id);  
+
 local sub = obj:new();
-
-local channel_id = (_GET['roomid'] ~= nil and type(_GET['roomid']) == 'string') and _GET['roomid'] or "1200"; 
-local  channel_name = tonumber(channel_id);  
-
 sub:opt({
     ['channels'] =  {channel_name},
     ['idx_read'] = _GET['idx_read'] or 0 ,   

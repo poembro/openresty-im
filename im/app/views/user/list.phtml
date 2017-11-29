@@ -54,7 +54,7 @@
     color: #fff;
     height: 1.25rem;
     line-height: 1.25rem;
-    margin: 8px 18px 0;
+    margin: 0.5rem 8px 0;
     text-align: center;
     width: 3.325rem;
   }
@@ -74,7 +74,7 @@
 	                    
 	                    <li style="line-height: 1.5rem; overflow: hidden;"> 
                               <div style="float: left; width:50px;"><img   alt="头像" src="/static/wap/img/portrait.jpg"> </div> 
-                              <div style="float:right;"><a href="##">{{v['uid']}} -- {{v['nickname']}} </a></div>  
+                              <div style="float:right;"><a href="/im/room?touid={{v['uid']}}">{{v['uid']}} -- {{v['nickname']}} </a></div>  
                         </li>
                       
 	                  {% end %}

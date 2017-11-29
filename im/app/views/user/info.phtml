@@ -60,20 +60,21 @@
                                name="mobile" class="text" value="{{userinfo['mobile']}}"/>
                         </li>
                          
-                        <li><span>密码:(不填不修改)</span> 
-                                <input type="password" name="password" id="password" placeholder="密码" class="text"  value="" maxlength="20" />
+                        <li>
+                            <span>密    码: </span> 
+                            <input type="password" name="password" id="password"  placeholder="密码(不填不修改)" class="text"  value="" maxlength="20" />
                         </li> 
                          
-                         <li> <span>真实姓名：</span> 
+                         <li> <span>真实名：</span> 
                               <input type="text" placeholder="姓名" id="realname" maxlength="20" name="realname"  value="{{userinfo['realname']}}" class="text"/> 
                          </li> 
                         
-                          <li> <span>昵称：</span> 
+                          <li> <span>昵    称：</span> 
                                <input type="text" placeholder="昵称" id="nickname" maxlength="20" name="nickname"  value="{{userinfo['nickname']}}" class="text"/> 
                          </li> 
                         
                          <li style="width: 50%;">    
-                                 <span>性别:</span>
+                                 <span>性    别:</span>
                                  <select name="sex" id="sex_id">
                                       <option 
                                         {% if userinfo['sex'] == 1 then %}
@@ -93,7 +94,7 @@
  
                          </li>
                           
-                         <li style="width: 50%;"> <span>头像：</span> 
+                         <li style="width: 50%;"> <span>头    像: </span> 
                                   <a style="  border: 1px solid rgb(61, 127, 222);
                                                 height: 34px;
                                                 border-radius: 3px;
