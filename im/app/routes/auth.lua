@@ -140,10 +140,14 @@ auth_router:post("/login", function(req, res, next)
         isExist = false
     end
 
+                
+    local g = userid..'--||'.. mobile ..'--||'.. (user.regtime or "")
+    local signVal = utils.encrypted(g, pwd_secret)
+     
     if isExist == true then  
          local ok, err = req.cookie.set({
-            key = "user",
-            value =  utils.encrypted(userid..'--||'.. mobile ..'--||'.. (user.regtime or ""), pwd_secret),
+            key = "_TOKEN",
+            value = signVal,
             path = "/",
             --domain = "new.cn",
             secure = false, --设置后浏览器只有访问https才会把cookie带过来,否则浏览器请求时不带cookie参数
@@ -163,7 +167,7 @@ end)
 
 auth_router:get("/logout", function(req, res, next)
          local ok, err = req.cookie.set({
-            key = "user",
+            key = "_TOKEN",
             value =  0,
             path = "/",
             --domain = "new.cn",

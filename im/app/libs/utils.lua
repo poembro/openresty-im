@@ -10,8 +10,7 @@
 - @History <author> <time> <version > <desc>
     sixiong 2016年12月11日下午22:06:41  1.0  第一次建立该文件
 --]] 
- 
-local type = type
+  
 local pairs = pairs
 local type = type
 local mceil = math.ceil
@@ -20,35 +19,39 @@ local mrandom = math.random
 local mmodf = math.modf
 local sgsub = ngx.re.gsub
 local tinsert = table.insert
-local date = require("app.libs.date")
+local date = require("dashboard.libs.date")
 local resty_sha256 = require "resty.sha256"
-local str = require "resty.string"
+local STR = require "resty.string"
 local ngx_quote_sql_str = ngx.quote_sql_str
-local aes = require "resty.aes"; 
- 
- 
+local aAES = require "resty.aes"; 
+local encode_base64 = ngx.encode_base64;
+local decode_base64 = ngx.decode_base64;
+
 local _M = {}
  
-function _M.encrypted(strargs, key)
-     if type(strargs) ~= "string" then
-         return nil;
-     end
-     
-    local aesRes = aes:new(key, nil, aes.cipher(128,"ecb"), aes.hash.md5, 1);
-    local res = aesRes:encrypt(strargs);
-    return ngx.encode_base64(res):gsub("[+/=]", {["+"] = "-", ["/"] = "_",["="] = "."});
+_M.pwd_secret = "1234567890123456"
+ 
+function _M.encrypted(strargs, key) 
+    if type(strargs) ~= "string" then
+        return nil
+    end
+ 
+	local IV = key  --只能16  [a-Z|0-9]个字符长度 
+	local aes_128_cbc_with_iv = assert(aAES:new(IV, nil, aAES.cipher(128,"cbc"), {iv=IV})) 
+	local encrypted = aes_128_cbc_with_iv:encrypt(strargs)
+	return encode_base64(encrypted)  
 end
- 
- 
+  
 function _M.decrypted(strargs, key) 
-     if type(strargs) ~= "string" then
-         return nil
-     end
-     strargs = strargs:gsub("[-_.]",{["-"] = "+", ["_"] = "/", ["."] = "="})
-     strargs = ngx.decode_base64(strargs);
-      
-    local aesRes = aes:new(key, nil, aes.cipher(128,"ecb"), aes.hash.md5, 1);
-    return aesRes:decrypt(strargs)
+    if type(strargs) ~= "string" then
+        return nil
+    end
+
+    local IV = key --只能16  [a-Z|0-9]个字符长度  
+    local aes_128_cbc_with_iv = assert(aAES:new(IV, nil, aAES.cipher(128,"cbc"), {iv=IV}))
+              
+    local res = decode_base64(strargs)
+    return aes_128_cbc_with_iv:decrypt(res) 
 end 
 
 
@@ -56,7 +59,7 @@ function _M.encode(s)
     local sha256 = resty_sha256:new()
     sha256:update(s)
     local digest = sha256:final()
-    return str.to_hex(digest)
+    return STR.to_hex(digest)
 end
  
  
@@ -161,33 +164,33 @@ return _M
 
 
 -- local resty_sha256 = require "resty.sha256"
--- local str = require "resty.string"
--- local sha256 = resty_sha256:new()
--- ngx.say(sha256:update("hello"))
--- local digest = sha256:final()
--- ngx.say("sha256: ", str.to_hex(digest))
+    -- local str = require "resty.string"
+    -- local sha256 = resty_sha256:new()
+    -- ngx.say(sha256:update("hello"))
+    -- local digest = sha256:final()
+    -- ngx.say("sha256: ", str.to_hex(digest))
 
--- local resty_md5 = require "resty.md5"
--- local md5 = resty_md5:new()
--- if not md5 then
---     ngx.say("failed to create md5 object")
---     return
--- end
+    -- local resty_md5 = require "resty.md5"
+    -- local md5 = resty_md5:new()
+    -- if not md5 then
+    --     ngx.say("failed to create md5 object")
+    --     return
+    -- end
 
--- local ok = md5:update("hel")
--- if not ok then
---     ngx.say("failed to add data")
---     return
--- end
+    -- local ok = md5:update("hel")
+    -- if not ok then
+    --     ngx.say("failed to add data")
+    --     return
+    -- end
 
--- ok = md5:update("lo")
--- if not ok then
---     ngx.say("failed to add data")
---     return
--- end
+    -- ok = md5:update("lo")
+    -- if not ok then
+    --     ngx.say("failed to add data")
+    --     return
+    -- end
 
--- local digest = md5:final()
+    -- local digest = md5:final()
 
--- local str = require "resty.string"
--- ngx.say("md5: ", str.to_hex(digest))
---     -- yield "md5: 5d41402abc4b2a76b9719d911017c592"
+    -- local str = require "resty.string"
+    -- ngx.say("md5: ", str.to_hex(digest))
+    --     -- yield "md5: 5d41402abc4b2a76b9719d911017c592"

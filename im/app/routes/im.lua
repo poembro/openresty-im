@@ -2,7 +2,7 @@ local pairs = pairs
 local ipairs = ipairs
 local utils = require("app.libs.utils")  
 local user_model = require("app.model.user") 
-
+local pwd_secret = require("app.config.config").pwd_secret
 
 local lor = require("lor.index")
 local imRouter = lor:Router()
@@ -32,7 +32,7 @@ imRouter:get("/room", function(req, res, next)
     end 
 
     local IMrand = math.random(1000, 9999)
-    local IMtoken = utils.encrypted('1000'..'--||'.. IMrand ..'--||'.. userid, '123456789')
+    local IMtoken = utils.encrypted('1000'..'--||'.. IMrand ..'--||'.. userid, pwd_secret)
  
     res:render("im", {
          IMrand = IMrand,

@@ -5,7 +5,7 @@ local pwd_secret = require("app.config.config").pwd_secret
   
 local function is_login(req)   
     if req.cookie then
-        local str = req.cookie.get("user") 
+        local str = req.cookie.get("_TOKEN") 
         if not str or str == "" then  
            return false, nil
         end 
