@@ -206,7 +206,7 @@ $(function(){
             var self = this; 
             var ajaxTimeoutTest =  $.ajax({
                     type : "GET",
-                    url :"/comet/sub",
+                    url :"/im/sub",
                     global: true, //希望产生全局的事件
                     data : {
                         idx_read:self['msg_index'], 
@@ -405,6 +405,7 @@ $(function(){
           var self = this; 
           var res =data; 
           var html = null; 
+
           res['response_timeline'] = new Date(parseInt(res['response_timeline']) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");  
           if (res['msg'] && (res['msg']).length > 2){
               res['msg'] = _.face.handleface( res['msg'] );
@@ -415,25 +416,17 @@ $(function(){
               html = self.message_me(IM['data']['user']['face'], IM['data']['user']['nickname'],  res['response_timeline'] , res['msg'], res['pic']);
           }else{
              //别人发消息给我的模板
-              html = self.message(res['me']['face'], res['me']['nickname'],  res['response_timeline'] , res['msg'], res['pic']);
+              var face = res['me']['face'] ||  "/static/wap/img/portrait.jpg"
+              html = self.message(face, res['me']['nickname'],  res['response_timeline'] , res['msg'], res['pic']);
           }
           //插入新消息
           var messageList = $("#messageList")
-          messageList.append(html); 
+          messageList.append($(html).hide().fadeIn('slow')); 
            
           //判断长度 是否需要删除 
           if (messageList.children().length > 26) {
                 messageList.children().first().remove(); 
           }
-          
-          //修改图片高度
-          if (res['pic'] && (res['pic']).length > 5){
-              // var lastElement = messageList.children().last();
-              //console.log(lastElement);
-               //   heightNum = lastElement.children('.content').children('.bubble').children('.bubble_cont').children('.picture').children('.msg-img').height();
-              // lastElement.height(200); 
-          }
-          _.auto();
      },  
       message : function (face, nickname, time, msg, ispic){ //别人发消息给我的模板； 
           var str = '<div class="message">  ';
