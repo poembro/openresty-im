@@ -49,6 +49,49 @@ _M.opt = function(self, k, v)
     self.store = ngx.shared[self.config['store_name']]
 end
 
+
+--[[
+-- 向频道写入消息
+-- @param ngx.shared.dict, 共享内存
+-- @param string channel_id,可用ngx.crc32_long生成
+-- @param int channel_timeout, 频道空闲超时时间
+-- @param string msg,消息内容 必须为字符串
+-- @param int msg_lefttime， 消息生存周期
+-- @param int msglist_len, 消息队列长度
+-- @return boolean
+--]]
+local function _write(store, channel_id, channel_timeout, msg, msg_lefttime, msglist_len)  
+    local idx, ok, err
+    -- 消息当前读取位置计数器+1
+    idx, err = store:incr(channel_id, 1)
+    -- 如果异常，则新建频道
+    if err then
+        ok, err = store:set(channel_id, 1, channel_timeout) 
+        if err then  
+           return 0
+        end
+        idx = 1
+    else
+        ok, err =  store:replace(channel_id, idx, channel_timeout)
+        if err then 
+            return 0 
+        end
+    end
+
+    -- 写入消息 
+    ok, err = store:set('m' .. channel_id .. idx, msg,  msg_lefttime) 
+    if err then 
+        return 0 
+    end
+    --ngx.log(ngx.ERR, 'set(m' .. channel_id .. idx, '----->' , msg, '<------',  msg_lefttime..');');
+    -- 清除队列之前的旧消息
+    if idx > msglist_len then
+        store:delete('m' .. channel_id .. (idx - msglist_len))
+    end
+ 
+    return idx
+end
+
 local resty_lock = require "resty.lock"
 
 --[[
@@ -61,7 +104,7 @@ local resty_lock = require "resty.lock"
 -- @param int msglist_len, 消息队列长度
 -- @return boolean
 --]]
-local function _write(store, channel_id, channel_timeout, msg, msg_lefttime, msglist_len) 
+local function _write2(store, channel_id, channel_timeout, msg, msg_lefttime, msglist_len) 
     local lock = resty_lock:new("channels", {exptime=5})
     local elapsed, err = lock:lock("lock_123456")
     if not elapsed then return 0  end
