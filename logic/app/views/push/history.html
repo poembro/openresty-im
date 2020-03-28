@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+<script src="/static/wap/js/jquery.min.js"  type="text/javascript"></script> 
+ 
+<link type="text/css" rel="stylesheet" href="/static/wap/css/main.css?07201"/>
+<title>历史记录</title>
+</head>
+
+<body class="body"> 
+    <header class="top">
+        <ul> 
+            <li><a href="/user/list">历史记录</a></li> 
+        </ul>
+    </header>
+ 
+ 
+<style> 
+.paging{
+    background-color: #486590;
+    color: #fff;
+    height: 2rem;
+    line-height: 2rem;
+    margin-top: 0.4rem;
+    text-align: center;
+}
+.paging a{ 
+    border-radius: 0.1rem;
+    color: #fff;
+    height: 1.25rem;
+    line-height: 1.25rem;
+    margin: 0.5rem 8px 0;
+    text-align: center;
+    width: 3.325rem;
+}
+.paging  .curr{ 
+background-color: #000045;
+}
+</style> 
+
+
+<div class="member"> 
+    <div class="box">
+        <ul> 
+        {% if userall then %}
+            {% for _, v in pairs(userall) do %}
+            <li onclick="window.location.href='/room/main?touid={{v['uid']}}'">
+                <div class="fl"><img src="/static/wap/img/portrait.jpg" alt="头像" style="width:50px;height:50px;"> </div> 
+                <div class="fl">{{v['uid']}} -- {{v['nickname']}}</div>  
+            </li>
+            {% end %}
+        {% end %}
+
+        <li onclick="window.location.href='/room/main?touid=1225'">
+            <div class="fl"><img src="/static/wap/img/portrait.jpg" alt="头像" style="width:50px;height:50px;"> </div> 
+            <div class="fl">1225 -- hello</div>  
+        </li>
+        </ul>    
+    </div> 
+</div>   
+
+{% if page then %}
+<div class="paging">
+    <a href="{{page['home']}}">首页</a>
+    {% if page['prev'] then %}
+    <a href="{{page['prev']}}"> 上一页</a>
+    {%else%}
+    <a href="javascript:;">上一页</a> 
+    {% end %}
+    
+    {% if page['num'] then %}
+    {% for k, v in pairs(page['num']) do %}
+        {% if  page['page'] == k then %} 
+        <a href="{{v}}"   class="curr" >{{k}}</a>  
+        {%else%}
+        <a href="{{v}}" >{{k}}</a>  
+        {% end %} 
+    {% end %}
+    {%end%}
+
+    {% if page['next'] then %}
+    <a href="{{page['next']}}">下一页</a>
+    {%else%}
+    <a href="javascript:;">下一页</a> 
+    {% end %}
+    <a href="{{page['end']}}">末页</a>
+</div>  
+{% end %} 
+{(mg/footer.html)} 

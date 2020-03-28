@@ -1,0 +1,47 @@
+
+{(mg/header.html)} 
+<div class="member">
+    <div class="box">
+        <ul> 
+            <li > 
+                <div >
+                    {% if userinfo['face'] then %}
+                        <img alt="当前头像" style=" height: 1rem;" src="{{userinfo['face']}}"> 
+                    {% else %}  
+                        <img  alt="当前头像" style=" height: 1rem;" src="/static/wap/img/portrait.jpg"> 
+                    {% end %} 
+                    <br/>
+                    <span><a href="/user/info"> {{userinfo['nickname']}}</a></span>
+                </div>  
+                    
+            </li>
+                
+        </ul>    
+    </div> 
+
+    <div class="box">
+        <ul> 
+            <li>  
+                <div><a href="/friend/new"> 新的好友 </a></div>  
+            </li> 
+        </ul>    
+    </div> 
+
+    <div class="box">
+        <ul> 
+            <li>  
+                <div><a href="/friend/add"> 添加好友 </a></div>  
+            </li> 
+        </ul>    
+    </div> 
+
+    <div class="box">
+        <ul> 
+            <li>  
+                <div><a href="#"> 关于我们 </a></div>  
+            </li> 
+        </ul>    
+    </div> 
+</div>
+    
+{(mg/footer.html)}

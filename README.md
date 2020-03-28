@@ -89,3 +89,51 @@
 
 
 
+cd /data/web/openresty-im/proto
+protoc -o logic-goim.pb logic-goim.proto
+
+
+
+
+
+
+CREATE TABLE `mg_user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户UID',
+  `nickname` varchar(30) NOT NULL DEFAULT '' COMMENT '昵称',
+  `mobile` varchar(15) NOT NULL DEFAULT '' COMMENT '手机号码',
+  `password` varchar(256) NOT NULL COMMENT '密码',
+  `user_id` bigint(11) NOT NULL COMMENT 'user_id',
+  `regtime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '注册时间',
+  `regip` varchar(20) NOT NULL DEFAULT '0' COMMENT '注册IP',
+  `logintime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '注册时间',
+  `loginip` bigint(20) NOT NULL DEFAULT '0' COMMENT '注册IP',
+  `face` varchar(200) NOT NULL DEFAULT '/static/wap/img/portrait.jpg' COMMENT '头像',
+  `sex` tinyint(1) NOT NULL DEFAULT '1' COMMENT '性别 1-男 0-女',
+  `visible` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态 1-显示 0-删除',
+  `remark` varchar(255) NOT NULL DEFAULT '',
+  `realname` varchar(30) NOT NULL DEFAULT '' COMMENT '真实姓名',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`),
+  KEY `mobile` (`mobile`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户表';
+
+
+CREATE TABLE `mg_group` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '群组id',
+  `group_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '群组id',
+  `name` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT '组名',
+  `dateline` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='群组';
+
+CREATE TABLE `mg_group_user` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+  `group_id` bigint(20) unsigned NOT NULL COMMENT '组id',
+  `user_id` bigint(20) unsigned NOT NULL COMMENT '用户id',
+  `label` varchar(20) COLLATE utf8mb4_bin NOT NULL COMMENT '用户在群组的昵称',
+  `dateline` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_group_user` (`group_id`,`user_id`) USING BTREE,
+  KEY `idx_user_id` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='群组成员关系';
+

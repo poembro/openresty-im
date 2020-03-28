@@ -8,8 +8,8 @@ local Response = require("lor.lib.response")
 local Application = require("lor.lib.application")
 local Wrap = require("lor.lib.wrap")
 
-LOR_FRAMEWORK_DEBUG = false
-
+local LOR_FRAMEWORK_DEBUG = true
+  
 local createApplication = function(options)
     if options and options.debug and type(options.debug) == 'boolean' then
         LOR_FRAMEWORK_DEBUG = options.debug
