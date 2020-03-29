@@ -1,3 +1,4 @@
+local string_find = string.find
 local server = require "resty.websocket.server"   
 local handler = require("comet.app.handler")
 
@@ -18,11 +19,11 @@ function _M:run()
     --还是由ngx.thread.spawn创建的“轻量级线程”，都是和创建它们的请求绑定的。  
     local co = ngx.thread.spawn(handler.ngx_thread_func, wb)
 
-    local data, typ, err  
+    local data, typ, err, bytes
     while wb.ngx_thread_spawn do
         data, typ, err = wb:recv_frame()
         if wb.fatal then
-            ngx.log(ngx.ERR, '--> wb.fatal :', err)
+            ngx.log(ngx.ERR, '--> err fatal ', err)
             break
         end
 
@@ -32,35 +33,36 @@ function _M:run()
             data = (data or '') .. cut_data
         end
 
-        if not data then
-            if not string.find(err, "timeout", 1, true) then
-                ngx.log(ngx.ERR, '--> 连接异常 :', err)
-                break
-            end
+        if not data and err and not string_find(err, "timeout", 1, true) then
+            ngx.log(ngx.ERR, '--> conn err ', err)
+            break 
         end
-  
+
         if typ == "close" then 
-            ngx.log(ngx.ERR, '-->  收到close :', err)
             break
         elseif typ == "ping" then 
-            ngx.log(ngx.ERR, '-->  收到ping :', err)
+            bytes, err = self:send(wb, "", "pong")
+            if not bytes then
+                ngx.log(ngx.ERR, "failed to send frame: ", err)
+                break
+            end
         elseif typ == "pong" then
-            ngx.log(ngx.ERR, '-->  收到pong:', err)
-        elseif typ == 'text' then 
-            if data and data ~= "" then
-                ngx.log(ngx.ERR, "-->", data)
-            end 
+            bytes, err = self:send(wb, "", "ping")
+            if not bytes then
+                ngx.log(ngx.ERR, "failed to send ping frame: ", err)
+                break
+            end
         elseif typ == 'binary' then 
             if data then
                 handler:run(wb, data) 
-            end 
+            end
         else
-            break
+            break --exit
         end
     end  --end while
 
-    wb:send_close(1000, "与服务器断开连接...") 
     wb.ngx_thread_spawn = false
+    self:send(wb, "与服务器断开连接...", "close")
     --ok, err = ngx.thread.kill(co)
     ngx.thread.wait(co)
     --collectgarbage("setpause", 120)

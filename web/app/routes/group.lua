@@ -37,6 +37,7 @@ _M:get("/info", function(req, res, next)
     res:render("group/info", { data = result })
 end)
 
+--加入讨论组
 _M:post("/add", function(req, res, next)
     local user_id = res.locals.me.user_id 
     local group_id = req.body.group_id 

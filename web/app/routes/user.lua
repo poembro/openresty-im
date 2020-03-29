@@ -8,8 +8,6 @@ local pwd_secret = require("config").pwd_secret
 local lor = require("lor.index")
 local user_model = require("web.dao.user")    
 local _M = lor:Router()
- 
- 
 
 _M:get("/index", function(req, res, next)
     local uid = res.locals.me.user_id 
@@ -19,7 +17,6 @@ _M:get("/index", function(req, res, next)
     })
 end)
 
- 
 -- 个人资料 
 _M:get("/info", function(req, res, next)
     local uid = res.locals.me.user_id 
@@ -27,7 +24,6 @@ _M:get("/info", function(req, res, next)
     res:render("user/info", { userinfo = result })
 end)
 
- 
 _M:post("/info", function(req, res, next)
     local uid = res.locals.me.user_id 
     
@@ -63,8 +59,5 @@ _M:post("/info", function(req, res, next)
         })
     end
 end)
- 
- 
-
 
 return _M

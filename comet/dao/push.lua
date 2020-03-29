@@ -1,25 +1,22 @@
  
- require "resty.core" 
- local rds = require "libs.iredis"
- local config = require("config")
+require "resty.core" 
+local rds = require "libs.iredis"
+local config = require("config")
+local string_format = string.format 
+local _prefixMidServer = "mid_%d" 
+local _prefixKeyServer = "key_%s" 
+local _prefixServerOnline = "ol_%s" 
+local keyMidServer = function (mid) return string_format(_prefixMidServer, mid) end
+local keyKeyServer = function (key)  return string_format(_prefixKeyServer, key) end
+local keyServerOnline = function (key) return string_format(_prefixServerOnline, key) end
  
- local string_format = string.format 
- local _prefixMidServer = "mid_%d" 
- local _prefixKeyServer = "key_%s" 
- local _prefixServerOnline = "ol_%s" 
- local keyMidServer = function (mid) return string_format(_prefixMidServer, mid) end
- local keyKeyServer = function (key)  return string_format(_prefixKeyServer, key) end
- local keyServerOnline = function (key) return string_format(_prefixServerOnline, key) end
+local ok, new_tab = pcall(require, "table.new")
+if not ok or type(new_tab) ~= "function" then
+    new_tab = function (narr, nrec) return {} end
+end
  
-  
- local ok, new_tab = pcall(require, "table.new")
- if not ok or type(new_tab) ~= "function" then
-     new_tab = function (narr, nrec) return {} end
- end
- 
- 
- local _M = new_tab(0, 12)
- _M._VERSION = '0.01'
+local _M = new_tab(0, 12)
+_M._VERSION = '0.01'
   
 local instanse = nil 
 
@@ -41,7 +38,7 @@ function _M:addMapping(mid, key, server)
     local ok, err 
     ok, err = self:connect():hset(midkey, key, server)
     if err then
-        ngx.log(ngx.ERR, "--hset-->   ",ok or "", "  --- ", err or "")
+        ngx.log(ngx.ERR, "--hset-->",ok or "", "  --- ", err or "")
     end
 
     ok, err = self:connect():expire(midkey, ttl)
@@ -49,7 +46,7 @@ function _M:addMapping(mid, key, server)
     local keykey = keyKeyServer(key) 
     ok, err = self:connect():set(keykey, server, 'EX', ttl)
     if err then
-        ngx.log(ngx.ERR, "--hset-->   ", ok or "", "  --- ", err or "")
+        ngx.log(ngx.ERR, "--hset-->", ok or "", "  --- ", err or "")
     end 
 end
 
@@ -86,7 +83,6 @@ function _M:addServer(server)
     local val = '{"roomcount":1,"server":"' .. server .. '", "updated": ' .. dateline.. '}'
     return self:connect():hset(key, hash, val)
 end
-
 
 local cjson = require "cjson" 
 local pb = require "pb" 
