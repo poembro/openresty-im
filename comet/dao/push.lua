@@ -1,7 +1,7 @@
  
  require "resty.core" 
  local rds = require "libs.iredis"
- local config = require("config.config")
+ local config = require("config")
  
  local string_format = string.format 
  local _prefixMidServer = "mid_%d" 
@@ -25,8 +25,7 @@ local instanse = nil
 
 function _M:connect() 
     if not instanse then
-        local conf = config.redis
-        --使用案例 
+        local conf = config.redis 
         ngx.log(ngx.ERR, "--> new redis ")
         instanse = rds:new(conf) 
     end
@@ -96,7 +95,7 @@ pb.loadfile "/data/web/openresty-im/proto/logic-goim.pb"
 function _M:config(mid, room_id, accepts, room_name) 
     local room_id = "live://1000"
     local key = ngx.md5(mid .. "-web-" .. room_id)
-    --ngx.log(ngx.ERR, "=======9======>>", mid .. "-web-" .. room_id)
+    ngx.log(ngx.ERR, "=======9======>>", mid .. "-web-" .. room_id)
     local data = {
         mid = mid,
         platform = 'web',
@@ -114,8 +113,8 @@ function _M:verify(data)
     local mid = tostring(arr.mid)
     local room_id = arr.room_id
     local key = ngx.md5(mid .. "-web-" .. room_id)
-    --ngx.log(ngx.ERR, "==>>", mid .. "-web-" .. room_id)
-    --ngx.log(ngx.ERR, "==>>", key,  "==>>", arr.key)
+    ngx.log(ngx.ERR, "==>>", mid .. "-web-" .. room_id)
+    ngx.log(ngx.ERR, "==>>", key,  "==>>", arr.key)
     if key == arr.key then 
         return true, arr
     end

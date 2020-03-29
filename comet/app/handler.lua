@@ -4,29 +4,6 @@ local BaseAPI = require("comet.base_handler")
 local _M = BaseAPI:extend() 
  
 _M._VERSION = '0.01'
-
- 
-local function dump(v)
-    local __dump 
-    if not __dump then
-        __dump = function (v, t, p)    
-            local k = p or "";
-
-            if type(v) ~= "table" then
-                table.insert(t, k .. " : " .. tostring(v));
-            else
-                for key, value in pairs(v) do
-                    __dump(value, t, k .. "[" .. key .. "]");
-                end
-            end
-        end
-    end
-
-    local t = {"\r\n" ..'/*************** 调试日志 **************/' };
-    __dump(v, t);
-    print(table.concat(t, "\r\n"));
-end
- 
  
 _M.ngx_thread_func = function (wb)    
     local data = {}
@@ -58,12 +35,6 @@ function _M:run(wb, data)
     --heartbeat
     if op == 0x2 then
         self:heartbeat(wb)
-    end
-    
-    --send message
-    if op == 0x4 then
-        local msg = protocol:encode(0x5, '{ "errno": 0,  "errmsg": "", "daata": {}}' )
-        myself:send(wb, msg, 'binary')
     end
     
     --auth

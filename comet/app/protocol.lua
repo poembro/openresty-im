@@ -12,9 +12,8 @@ if not ok then
     new_tab = function (narr, nrec) return {} end
 end
 
-local _M = new_tab(0, 5)
-
-_M.new_tab = new_tab
+local _M = new_tab(0, 3)
+ 
 _M._VERSION = '0.07'
 
 local _PutInt32 = function (t_num)
@@ -74,27 +73,27 @@ end
 function _M:decode(data)
     local alpha,red, green, blue
 
-    local r1 = string.sub(data, 1, 4) 
+    local r1 = sub(data, 1, 4) 
     alpha,red, green, blue = byte(r1, 1, 4)
     local packLen = int32(alpha,red, green, blue)
  
-    local r2 = string.sub(data, 5, 6)
+    local r2 = sub(data, 5, 6)
     green, blue = byte(r2, 1, 2)
     local rawheadersize = int16(green, blue)
     
-    local r3 = string.sub(data, 7, 8)
+    local r3 = sub(data, 7, 8)
     green, blue = byte(r3, 1, 2)
     local ver = int16(green, blue)
       
-    local r4 = string.sub(data, 9, 12)
+    local r4 = sub(data, 9, 12)
     alpha,red, green, blue = byte(r4, 1, 4)
     local op = int32(alpha,red, green, blue)
     
-    local r5 = string.sub(data, 13, 16)
+    local r5 = sub(data, 13, 16)
     alpha,red, green, blue = byte(r5, 1, 4)
     local seq = int32(alpha,red, green, blue) 
     
-    local body = string.sub(data, 17, -1)
+    local body = sub(data, 17, -1)
     
     return packLen, rawheadersize, ver, op, seq, body
 end

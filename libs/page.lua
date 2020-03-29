@@ -6,7 +6,7 @@ local _M = {}
 _M.url = ngx.var.request_uri
  
  --[[
- * 显示分类
+ * 显示分页
  * @access public
  * @param int page 当前页
  * @param int total 总记录数

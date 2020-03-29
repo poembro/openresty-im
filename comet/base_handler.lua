@@ -7,10 +7,7 @@ function _M:new(name)
     self._name = name
 end
 
-function _M:auth(data, typ, err)
-    ngx.log(ngx.DEBUG, " executing plugin \"", self._name, "\": init_worker")
-end
- 
+
 --处理websocket协议
 function _M:send(wb, msg, typ)
     local res, err

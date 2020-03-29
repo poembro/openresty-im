@@ -6,7 +6,7 @@ local pairs = pairs
 local mysql = require("resty.mysql")
 local cjson = require("cjson")
 local utils = require("libs.utils")
-local config = require("config.config")
+local config = require("config")
 local DB = {}
 
 function DB:new(conf)

@@ -42,8 +42,7 @@ function _M:run()
         if typ == "close" then 
             ngx.log(ngx.ERR, '-->  收到close :', err)
             break
-        elseif typ == "ping" then
-            --send_message(wb, dateline, "pong")
+        elseif typ == "ping" then 
             ngx.log(ngx.ERR, '-->  收到ping :', err)
         elseif typ == "pong" then
             ngx.log(ngx.ERR, '-->  收到pong:', err)
