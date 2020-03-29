@@ -96,7 +96,7 @@
             var data = {}  
             data["type"]  = 'text' 
             data["msg"]  = msg 
-            data["roomid"]  = _.config.options.room_id
+            data["room_id"]  = _.config.options.room_id
             if (msgtype && msgtype.length > 5) {
                 data["type"]  = 'image'  
                 data["msg"]  = msgtype 

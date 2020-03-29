@@ -1,17 +1,18 @@
+local push = require("comet.dao.push")
 local protocol = require("comet.app.protocol") 
-local push = require("comet.dao.push") 
-local BaseAPI = require("comet.base_handler")
+local BaseAPI = require("comet.app.base_handler")
 local _M = BaseAPI:extend() 
  
-_M.ngx_thread_func = function (wb)    
+_M.ngx_thread_func = function (wb) 
     local data, msgstr, msg
-    local reply = push:subscribe()
+    local reply = push:subscribe() 
+
     while wb.ngx_thread_spawn do
         data = reply()
         if data and data[3] then 
-            msgstr = push:msgHandle(data[3])
-            msg = protocol:encode(0x10, msgstr)
-            if msg ~= "" then
+            msgstr = push:dispatch(wb.ctx.user, data[3])
+            if msgstr then 
+                msg = protocol:encode(0x10, msgstr)
                 _M:send(wb, msg, 'binary')
             end
         end
@@ -26,8 +27,7 @@ function _M:run(wb, data)
     local packLen, hsize, ver, op, seq, body
     packLen, hsize, ver, op, seq, body = protocol:decode(data)
 
-    ngx.log(ngx.ERR, "--> packLen:", packLen, "<====>",  "hsize:", 
-       hsize, "<====>",  "op:", op,  "<====>", "seq:", seq, "<====>", "body:", body)
+    -- ngx.log(ngx.ERR, "--> packLen:", packLen, "<====>",  "hsize:", hsize, "<====>",  "op:", op,  "<====>", "seq:", seq, "<====>", "body:", body)
     
     --heartbeat
     if op == 0x2 then

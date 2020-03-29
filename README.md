@@ -29,7 +29,7 @@
     [root@iZ~]#tar xvf openresty-1.11.2.3.tar.gz
     [root@iZ~]#cd openresty-1.11.2.3
     ./configure --with-luajit && make && make install
-
+    
     
     ##为了保持与goim协议一致 增加protobuf 
     安装参考 https://zhuanlan.zhihu.com/p/26014103

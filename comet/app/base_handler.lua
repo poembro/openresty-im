@@ -7,7 +7,6 @@ function _M:new(name)
     self._name = name
 end
 
-
 --处理websocket协议
 function _M:send(wb, msg, typ)
     local res, err
@@ -33,5 +32,7 @@ function _M:send(wb, msg, typ)
     wb.is_send_lock = false 
     return res, err
 end
+
+
 
 return _M

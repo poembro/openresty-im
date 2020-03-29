@@ -69,19 +69,19 @@ _M:post("/main", function(req, res, next)
     local face = me.face 
 
     local dateline = ngx.time()
-    local roomid = req.body.roomid 
-    local type = req.body.type 
+    local room_id = req.body.room_id 
+    local typ = req.body.type 
     local msg = req.body.msg
      
     local data = {
         me = {mid = mid, nickname = nickname, mobile = mobile, face = face}, --记录发送人
-        type = type,
+        type = typ,
         msg = msg,
-        roomid = roomid, 
+        room_id = room_id, 
         dateline = dateline
     }
     
-    local success =  pushmodel:publish('live', 1000, data) 
+    local success =  pushmodel:publish(data) 
      
     if success then
         res:json({

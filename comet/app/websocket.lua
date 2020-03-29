@@ -1,8 +1,7 @@
 local string_find = string.find
 local server = require "resty.websocket.server"   
 local handler = require("comet.app.handler")
-
-local BaseAPI = require("comet.base_handler")
+local BaseAPI = require("comet.app.base_handler")
 local _M = BaseAPI:extend()
 
 function _M:run() 
