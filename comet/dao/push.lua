@@ -3,6 +3,7 @@ require "resty.core"
 local cjson = require "cjson" 
 local string_format = string.format 
 local ngx_md5 = ngx.md5
+local url = require("config").url
 local _prefixMidServer = "mid_%d" 
 local _prefixKeyServer = "key_%s" 
 local _prefixServerOnline = "ol_%s" 
@@ -23,6 +24,7 @@ end
 function _M:config(mid, room_id, accepts, name) 
     local room_id = keyRoomId("live", room_id)
     local key = buildkey(mid, room_id)
+
     -- ngx.log(ngx.ERR, "=======9======>>", mid .. "-web-" .. room_id)
     local data = {
         mid = mid,
@@ -31,7 +33,7 @@ function _M:config(mid, room_id, accepts, name)
         accepts = "[1000,1001,1002]",
         key = key,
         room_name = name,
-        url = "ws://192.168.3.222:80/sub"
+        url = url
     }
     return data
 end

@@ -1,14 +1,6 @@
 return {
     -- 白名单配置：不需要登录即可访问；除非要二次开发，否则不应更改
     whitelist = { 
-     --   "^/m1",
-     --   "^/m2", 
-     --   "^/index$", 
-     --   "^/user/[0-9a-zA-Z-_]+/index$", 
-     --   "^/user/[0-9a-zA-z-_]+/follows$",
-     --   "^/user/[0-9a-zA-z-_]+/fans$",
-     --   "^/user/[0-9a-zA-z-_]+/hot_topics$",
-     --   "^/user/[0-9a-zA-z-_]+/like_topics$", 
         "^/auth/login$", -- login page
         "^/auth/register$", -- sign up page
         "^/auth/test$", 
@@ -27,32 +19,15 @@ return {
         topic_comment_page_size = 20, -- 文章详情页每页评论数
         notification_page_size = 10, -- 通知每页个数
     },
-
-    users = {
-        {
-            username = "test",
-            password = "test"
-        },
-        {
-            username = "sumory",
-            password = "1"
-        }
-    },  
-    
-    -- ########################## 以下配置需要使用者自定义为本地需要的配置 ########################## -- 
-    -- 生成session的secret，请一定要修改此值为一复杂的字符串，用于加密session
-    session_secret = "3584827dfed45b40328acb6242bdf13b",
-
-    -- 用于存储密码的盐16个字符，请一定要修改此值, 一旦使用不能修改，用户也可自行实现其他密码方案
-    pwd_secret = "salt_secret_for2", 
-    
+ 
     refresh_cookie = true,
-    
+
+    url  = "ws://47.107.163.111:80/sub",
     -- mysql配置
     mysql = { -- mysql config
         timeout = 5000, 
         connect_config = {
-            host = "192.168.3.111",
+            host = "127.0.0.1",
             port = 3306,
             database = "handan",
             user = "root",
