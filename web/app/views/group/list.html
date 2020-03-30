@@ -41,34 +41,34 @@
               {% end %}
             {% end %}
           </ul>
-      </div> 
-  </div>
-
-  {% if page and page['total'] > 10 then %}
-    <div class="paging">
-        <a href="{{page['home']}}">首页</a>
-      {% if page['prev'] then %}
-        <a href="{{page['prev']}}"> 上一页</a>
-      {%else%}
-        <a href="javascript:;">上一页</a> 
-      {% end %}
-        
-      {% if page['num'] then %}
-        {% for k, v in pairs(page['num']) do %}
-          {% if  page['page'] == k then %} 
-            <a href="{{v}}"   class="curr" >{{k}}</a>  
-            {%else%}
-            <a href="{{v}}" >{{k}}</a>  
-          {% end %} 
-        {% end %}
-      {%end%}
+      </div>
       
-      {% if page['next'] then %}
-        <a href="{{page['next']}}">下一页</a>
-      {%else%}
-        <a href="javascript:;">下一页</a> 
+  {% if page and page['total'] > 10 then %}
+  <div class="paging">
+      <a href="{{page['home']}}">首页</a>
+    {% if page['prev'] then %}
+      <a href="{{page['prev']}}"> 上一页</a>
+    {%else%}
+      <a href="javascript:;">上一页</a> 
+    {% end %}
+      
+    {% if page['num'] then %}
+      {% for k, v in pairs(page['num']) do %}
+        {% if  page['page'] == k then %} 
+          <a href="{{v}}"   class="curr" >{{k}}</a>  
+          {%else%}
+          <a href="{{v}}" >{{k}}</a>  
+        {% end %} 
       {% end %}
-      <a href="{{page['end']}}">末页</a>
-    </div>  
-  {% end %} 
-{(mg/footer.html)} 
+    {%end%}
+    
+    {% if page['next'] then %}
+      <a href="{{page['next']}}">下一页</a>
+    {%else%}
+      <a href="javascript:;">下一页</a> 
+    {% end %}
+    <a href="{{page['end']}}">末页</a>
+  </div>  
+{% end %} 
+{(mg/footer.html)}  
+  </div>

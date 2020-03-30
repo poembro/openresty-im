@@ -4,14 +4,14 @@
  
 /*信息*/  
 .member {
-    top: 5%;
+    top: 10%;
     bottom: 5%; 
     position: absolute;  
     background-color: #eee;   
     overflow: hidden;  
     display: flex;  
     flex-flow: column;  
-    height:90%;
+    height:85%;
     width: 100%;
  }
 
@@ -128,7 +128,7 @@ pre{
 }
     
 .footer .console_box button{text-decoration: none;}
-.footer .console_box .console_box_left {border: 1px solid #ccc;width: 80%;}
+.footer .console_box .console_box_left {border: 1px solid #ccc;width: 70%;}
 
 .footer .console_box .console_box_left .console_box_input {
     overflow-y: auto;  
@@ -146,14 +146,14 @@ pre{
 .footer .console_box .console_box_center {
     border-radius: 4px;
     font-size: 12px;  
-    width: 10%;
+    width: 15%;
 }  
     
 .footer .console_box .console_box_right {
     border-radius: 4px;
     cursor: pointer;
     font-size: 12px; 
-    width: 10%;
+    width: 15%;
 }
     
 /* 表情栏目切换start */
