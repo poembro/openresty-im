@@ -54,6 +54,8 @@
 | seq         | true | int32 bigendian | 序列号 |
 | body         | false | binary | $(package lenth) - $(header length) |
 
+![protocol](/web/app/static/avatar/protocol.png)
+
 #### 协议指令
 | 指令     | 说明  | 
 | :-----     | :---  |

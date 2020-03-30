@@ -170,7 +170,9 @@
             var ws = new WebSocket(_.config.options.url) 
             ws.binaryType = 'arraybuffer'
             ws.onopen = function() {
-                self.auth(ws)
+                self.auth(ws) 
+                var ishide = $("#doconfig")
+                if (ishide) ishide.click();
             }
             ws.onmessage = function(evt) {
                 var data = evt.data
@@ -257,9 +259,9 @@
             headerView.setInt16(verOffset, 1) //版本号为1
             headerView.setInt32(opOffset, 7)  //写入从内存的8第个字节序开始，值为7 标识auth
             headerView.setInt32(seqOffset, 1) //从内存的12个字节序开始· 值为1   序列号（服务端返回和客户端发送一一对应）
-            ws.send(self.mergeArrayBuffer(headerBuf, bodyBuf))
-
+            var flag = ws.send(self.mergeArrayBuffer(headerBuf, bodyBuf))
             //console.log("send: auth token: " + token)
+            return flag
         }, 
         messageReceived :  function (ver, body) { 
             //console.log("messageReceived:", "ver=" + ver, "body=" + body)  
