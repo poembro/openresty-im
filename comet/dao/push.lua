@@ -10,21 +10,19 @@ local _prefixServerOnline = "ol_%s"
 local keyMidServer = function (mid) return string_format(_prefixMidServer, mid) end
 local keyKeyServer = function (key)  return string_format(_prefixKeyServer, key) end
 local keyServerOnline = function (key) return string_format(_prefixServerOnline, key) end
- 
-local BaseAPI = require("comet.dao.base_handler")
-local _M = BaseAPI:extend()
-
 local _prefixRoomId = "%s://%d"
 local keyRoomId = function (typ, room_id)  return string_format(_prefixRoomId, typ, room_id) end
+
 
 local buildkey = function(mid, room_id)
     return ngx_md5(mid .. "-web-" .. room_id)
 end
+local BaseAPI = require("comet.dao.base_handler")
+local _M = BaseAPI:extend()
 
 function _M:config(mid, room_id, accepts, name) 
     local room_id = keyRoomId("live", room_id)
     local key = buildkey(mid, room_id)
-
     -- ngx.log(ngx.ERR, "=======9======>>", mid .. "-web-" .. room_id)
     local data = {
         mid = mid,
@@ -77,7 +75,7 @@ function _M:dispatch(user, rawdata)
     end 
 
     local data = cjson.decode(rawdata)
-      
+    
     if data.room_id ~= user.room_id then
         return false
     end
