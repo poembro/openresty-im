@@ -13,16 +13,11 @@ return {
         ext = "html",
         views = "/data/web/openresty-im/web/app/views/"
     },
-    -- 分页时每页条数配置
-    page_config = {
-        index_topic_page_size = 10, -- 首页每页文章数
-        topic_comment_page_size = 20, -- 文章详情页每页评论数
-        notification_page_size = 10, -- 通知每页个数
-    },
+
  
     refresh_cookie = true,
 
-    url  = "ws://47.107.163.111:80/sub",
+    url  = "ws://ci.cn:80/sub",
     -- mysql配置
     mysql = { -- mysql config
         timeout = 5000, 
@@ -54,6 +49,11 @@ return {
         chunk_size = 8096, 
         recieve_timeout = 20000,
         url = "/static/avatar/"
-    }
- 
+    },
+     -- 分页时每页条数配置
+     page_config = {
+        index_topic_page_size = 10, -- 首页每页文章数
+        topic_comment_page_size = 20, -- 文章详情页每页评论数
+        notification_page_size = 10, -- 通知每页个数
+    },
 }
