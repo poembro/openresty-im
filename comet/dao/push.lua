@@ -13,10 +13,10 @@ local keyServerOnline = function (key) return string_format(_prefixServerOnline,
 local _prefixRoomId = "%s://%d"
 local keyRoomId = function (typ, room_id)  return string_format(_prefixRoomId, typ, room_id) end
 
-
 local buildkey = function(mid, room_id)
     return ngx_md5(mid .. "-web-" .. room_id)
 end
+
 local BaseAPI = require("comet.dao.base_handler")
 local _M = BaseAPI:extend()
 

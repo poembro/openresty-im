@@ -8,7 +8,6 @@ function _M:new(name)
     self._name = name
 end
 
---处理websocket协议
 local instanse = nil
 
 function _M:connect() 

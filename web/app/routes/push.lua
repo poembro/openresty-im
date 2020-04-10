@@ -3,7 +3,6 @@ local tonumber = tonumber
 local pushmodel = require("comet.dao.push")
 local lor = require("lor.index")
 local _M = lor:Router()
- 
 
 local group_model = require("web.dao.group") 
 
@@ -72,7 +71,7 @@ _M:post("/main", function(req, res, next)
     local room_id = req.body.room_id 
     local typ = req.body.type 
     local msg = req.body.msg
-     
+    -- 需要验证一下 房间权限
     local data = {
         me = {mid = mid, nickname = nickname, mobile = mobile, face = face}, --记录发送人
         type = typ,
