@@ -33,6 +33,4 @@ function _M:send(wb, msg, typ)
     return res, err
 end
 
-
-
 return _M

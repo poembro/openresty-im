@@ -1,5 +1,5 @@
 local push = require("comet.dao.push")
-local protocol = require("comet.app.protocol") 
+local protocol = require("libs.protocol") 
 local BaseAPI = require("comet.app.base_handler")
 local _M = BaseAPI:extend() 
 
@@ -47,7 +47,6 @@ function _M:run(wb, data)
         self:auth(wb, body)  
     end
     
-    --0x9 原始消息 
 end
 
 function _M:heartbeat(wb) 
@@ -74,7 +73,7 @@ function _M:auth(wb, body)
     local server = ngx.var.server_addr
 
     push:addMapping(mid, key, server)
-   
+    
     local msg = protocol:encode(OpAuthReply, "ok")
     self:send(wb, msg, 'binary')
     return flag

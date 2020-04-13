@@ -10,7 +10,7 @@ end
 
 local instanse = nil
 
-function _M:connect() 
+function _M:conn() 
     if not instanse then
         local conf = config.redis 
         --ngx.log(ngx.ERR, "--> new redis ")
@@ -31,12 +31,12 @@ function _M:publish(typ, room_id, arr)
     local message = pb.encode("goim.PushMsg", data) 
 
     local topic = "goim-push-topic"  
-    self:connect():publish(topic, message)
+    self:conn():publish(topic, message)
 end
  
 function _M:subscribe()   
     local topic = "goim-push-topic"
-    return self:connect():subscribe(topic)  
+    return self:conn():subscribe(topic)  
 end 
 
 --处理自定义消息类型协议

@@ -11,6 +11,12 @@ _M:get("/group", function(req, res, next)
     res:render("push/index", data)
 end)
  
+-- 退出聊天组
+_M:get("/info", function(req, res, next) 
+    local user_id = res.locals.me.user_id  
+    res:render("push/info", {roomid = 111})
+end)
+
 -- 返回后端im 服务器地址
 _M:post("/group", function(req, res, next)
     local user_id = res.locals.me.user_id 
@@ -43,14 +49,6 @@ _M:post("/group", function(req, res, next)
         data = data
     })
 end)
-
--- 退出聊天组
-_M:get("/info", function(req, res, next) 
-    local user_id = res.locals.me.user_id  
-    res:render("push/info", {roomid = 111})
-end)
-
-
 
 --接收消息
 _M:post("/main", function(req, res, next)
