@@ -83,7 +83,7 @@ https://kefu.sgsbbs.cn/open/im?shop_id=8000
 
 ---
 
-## 协议格式  
+## 协议格式  (同goim)
 #### 二进制，请求和返回协议一致 
 | 参数名     | 必选  | 类型 | 说明       |
 | :-----     | :---  | :--- | :---       |
@@ -94,7 +94,6 @@ https://kefu.sgsbbs.cn/open/im?shop_id=8000
 | seq         | true | int32 bigendian | 序列号 |
 | body         | false | binary | $(package lenth) - $(header length) |
 
-![protocol](/web/app/static/avatar/protocol.png)
 
 #### 协议指令
 | 指令     | 说明  | 
