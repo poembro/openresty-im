@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<!-- <meta name="referrer" content="strict-origin-when-cross-origin" /> -->
+		<meta name="referrer" content="no-referrer-when-downgrade"" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+		<meta http-equiv="x-dns-prefetch-control" content="on"/>
+		<meta name="renderer" content="webkit">
+		<meta name="keywords" content="客服咨询"/>
+		<meta name="description" content="客服咨询"/>
+		<meta name="viewport" content="width=320,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,initial-scale=1"/>
+		<meta name="referrer" content="always">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="format-detection" content="telephone=no">
+		<title>客服咨询</title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/css.css"/> 
+		<style type="text/css">
+			.mui-content>.mui-table-view:first-child{
+				margin-top: 0rem;
+			}
+			.mui-table-view-cell{
+				padding: 5px 15px;
+			}
+			.mui-table-view-cell:after{display: none;}
+			.mui-table-view-cell{border-bottom: #dedede solid 1px;}
+			.mui-table-view .mui-media-object{
+				height: 55px;
+				line-height: 55px;
+				max-width: 55px;
+				border-radius: 27.5px;
+				width: 55px;
+				margin: 15px 10px 15px 0;
+			}
+			.mui-media-body{
+				line-height: 25px;
+				font-size: .32rem;
+				padding-left: .2rem;
+				display: inline-block;
+				margin-top: 17px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<h1 id="title" class="mui-title">我的</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;">
+						<label>
+						<input type="file" name="avatar" id="avatar" hidden="hidden" accept="image/*" />
+						<img class="mui-media-object mui-pull-left" src="img/login-bg.jpeg" id="litpic">
+						</label>
+						<div class="mui-media-body">
+							<span id=name>獨愛&婷</span>
+							<p class="mui-ellipsis" style="font-size: .28rem;">梦缘号：<span id="user">52ting</span></p>
+						</div>
+						<span class="mui-icon mui-icon-arrowright" style="float: right;font-size: .6rem;margin-top: .5rem;color: #999;"></span>
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<footer>
+			<li onclick="javascript:window.location.href='/info.html'"><span><img src="img/tabs/info.svg" ></span><span >消息</span></li>
+			<li onclick="javascript:window.location.href='/find.html'"><span><img src="img/tabs/find.svg" ></span><span> 发现 </span></li> 
+			<li onclick="javascript:window.location.href='/user.html'"><span><img src="img/tabs/min.1.svg" ></span><span style="color:#01CAFD"> 我的</span></li> 
+		</footer>
+	</body>  
+</html>

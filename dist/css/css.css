@@ -1,0 +1,36 @@
+/* 公共样式 */
+html{font-size: 50px;}
+*{padding: *;margin: 0;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td,img {padding:0;margin:0;}
+ul li{list-style: none;}
+li{list-style: none;}
+
+/*头部*/
+.mui-bar-nav{
+	background: #02C0FE !important;
+	height: 1rem;
+	}
+.mui-bar .mui-title{
+	height: 1rem;
+	line-height: 1rem;
+}
+.mui-title{
+	color: #fff !important;
+}
+/* 底部tab导航 */
+footer{
+   position: fixed;bottom: 0;height: 1.2rem;background: #fafafa;width: 100%;display: flex;
+    right: 0;
+    left: 0;
+}
+footer li{flex: 1;text-align: center;}
+footer span{display: block;font-size: .28rem;color: #A9A9A9;}
+footer span img{height: .55rem;vertical-align: middle;margin-top: .15rem;}
+footer li:nth-of-type(3) img{height: .45rem;vertical-align: middle;margin-top: .25rem;}
+
+.left{float: left;}
+.right{float: right;}
+.mui-bar-nav~.mui-content{padding-top: 1rem;padding-bottom: 1.2rem;}
+.mui-bar-nav{box-shadow: none;}
+
+header, footer, .mui-content, .message{ max-width: 640px; margin: 0 auto;}
