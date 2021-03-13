@@ -110,8 +110,13 @@ https://kefu.sgsbbs.cn/open/im?shop_id=8000
 ---
 
 
-## 感谢
+## 捐赠
+#### 比特币(BTC): 38hoh9Hni28sHF8fM9CqbPzGmfaPw1ABxq
 
+
+---
+
+## 感谢
 #### 感谢openresty的开源 感谢goim的开源
  
  
