@@ -18,7 +18,7 @@ _M.ngx_thread_func = function (wb)
     local data, msgstr, msg
     local reply = push:subscribe() 
 
-    while wb.ngx_thread_spawn do
+    while true do
         data = reply()
         if data and data[3] then 
             msgstr = push:dispatch(wb.ctx.user, data[3])
@@ -30,7 +30,6 @@ _M.ngx_thread_func = function (wb)
     end
 
     reply(false)
-    wb.ngx_thread_spawn = false 
     ngx.log(ngx.DEBUG, "--> ngx.thread.spawn stop")
 end
 

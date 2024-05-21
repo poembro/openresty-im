@@ -7,19 +7,16 @@ local _M = BaseAPI:extend()
 function _M:run() 
     --collectgarbage("collect")
     --local c1 = collectgarbage("count")  
-    --心跳包27秒后服务端主动断开   改为60
-    local wb, err = server:new({timeout = 60 * 1000, max_payload_len = 65535})
+    local wb, err = server:new({timeout = 60, max_payload_len = 65535})
     if not wb then return end 
      
-    wb.is_send_lock = false    --发送控制
-    wb.ngx_thread_spawn = true --子线程控制
     wb.ctx = {user = {}}
     --注意，无论是croutine.create()创建的常规的Lua coroutine
     --还是由ngx.thread.spawn创建的“轻量级线程”，都是和创建它们的请求绑定的。  
     local co = ngx.thread.spawn(handler.ngx_thread_func, wb)
 
     local data, typ, err, bytes
-    while wb.ngx_thread_spawn do
+    while true do
         data, typ, err = wb:recv_frame()
         if wb.fatal then
             ngx.log(ngx.ERR, '--> err fatal ', err)
@@ -60,14 +57,15 @@ function _M:run()
         end
     end  --end while
 
-    wb.ngx_thread_spawn = false
     self:send(wb, "与服务器断开连接...", "close")
-    --ok, err = ngx.thread.kill(co)
-    ngx.thread.wait(co)
+    ok, err = ngx.thread.kill(co)
+    if !ok then
+        ngx.log(ngx.ERR, '--> err fatal ', err)
+    end 
+    --ngx.thread.wait(co)
     --collectgarbage("setpause", 120)
     --local c2 = collectgarbage("count")
     --ngx.log(ngx.ERR, "--> 内存观测: 开始内存为", c1, " 结束内存为", c2)
- 
     ngx.log(ngx.ERR, "--> ngx.main.thread stop")
     return true
 end
